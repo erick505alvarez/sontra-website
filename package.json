@@ -10,8 +10,10 @@
     "lint": "eslint . --ext .astro,.js,.jsx,.ts,.tsx"
   },
   "dependencies": {
+    "@tailwindcss/vite": "^4.1.17",
     "astro": "^5.16.2",
-    "resend": "^6.5.2"
+    "resend": "^6.5.2",
+    "tailwindcss": "^4.1.17"
   },
   "devDependencies": {
     "@typescript-eslint/parser": "^8.48.0",
