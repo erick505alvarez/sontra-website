@@ -1,23 +1,45 @@
 ---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Header from "../components/Header.astro";
+import Hero from "../components/Hero.astro";
+import ProjectsGrid from "../components/ProjectsGrid.astro";
+import Testimonials from "../components/Testimonials.astro";
+import About from "../components/About.astro";
+import ContactForm from "../components/ContactForm.astro";
+import Footer from "../components/Footer.astro";
 
+const projects = [
+  {
+    title: "AI Low-code Platform Builder",
+    description: "AI, Low-code, Platform Builder",
+    img: "/placeholders/p1.jpg",
+  },
+  {
+    title: "Flex’d Fitness App Concept",
+    description: "Mobile app concept",
+    img: "/placeholders/p2.jpg",
+  },
+  {
+    title: "Corporate Intranet Redesign",
+    description: "Design system work",
+    img: "/placeholders/p3.jpg",
+  },
+  {
+    title: "AI-Powered Parking System for UMD",
+    description: "Embedded & Mobile",
+    img: "/placeholders/p4.jpg",
+  },
+];
 ---
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content={Astro.generator} />
-    <title>Astro</title>
-  </head>
-  <body>
-    <h1>Astro</h1>
-
-    <form method="POST" action="/api/contact">
-      <input type="email" name="email" required class="input" />
-      <textarea name="message" class="textarea" required></textarea>
-
-      <button type="submit" class="btn btn-primary">Send</button>
-    </form>
-  </body>
-</html>
+<BaseLayout>
+  <Header />
+  <main>
+    <Hero />
+    <ProjectsGrid projects={projects} />
+    <About />
+    <Testimonials />
+    <ContactForm />
+  </main>
+  <Footer />
+</BaseLayout>

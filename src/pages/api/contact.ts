@@ -1,20 +1,33 @@
-import type { APIRoute } from "astro";
-import { Resend } from "resend";
+import type { APIRoute } from 'astro';
+import { Resend } from 'resend';
 
-const { RESEND_API_KEY } = import.meta.env;
-const resend = new Resend(RESEND_API_KEY);
+
+const resend = new Resend(process.env.RESEND_API_KEY || '');
+
 
 export const POST: APIRoute = async ({ request }) => {
-  const data = await request.formData();
-  const email = data.get("email");
-  const message = data.get("message");
+const form = await request.formData();
+const name = form.get('name');
+const email = form.get('email');
+const message = form.get('message');
 
-  await resend.emails.send({
-    from: "Site Contact Form <no-reply@yourdomain.com>",
-    to: "you@yourdomain.com",
-    subject: "New Contact Form Submission",
-    html: `<p>Email: ${email}</p><p>Message: ${message}</p>`,
-  });
 
-  return new Response(JSON.stringify({ success: true }), { status: 200 });
+if (!email || !message) {
+return new Response(JSON.stringify({ success: false, error: 'Missing fields.' }), { status: 400 });
+}
+
+
+try {
+await resend.emails.send({
+from: 'Site <no-reply@yourdomain.com>',
+to: 'you@yourdomain.com',
+subject: `New contact from ${name || 'visitor'}`,
+html: `<p><strong>From:</strong> ${name} &lt;${email}&gt;</p><p>${message}</p>`
+});
+
+
+return new Response(JSON.stringify({ success: true }), { status: 200 });
+} catch (err) {
+return new Response(JSON.stringify({ success: false, error: err.message }), { status: 500 });
+}
 };
