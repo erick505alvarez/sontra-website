@@ -1,19 +1,33 @@
 @import "tailwindcss";
+@import "./fonts.css";
 
 :root {
---max-width: 1100px;
+  --max-width: 1100px;
 }
 
+@theme {
+  --font-heading: "Sora", "sans-serif";
+  --font-body: "Inter", "sans-serif";
 
-/* Basic utilities used by the layout to recreate spacing and typography from screenshot */
-/* .header-logo { font-weight: 800; letter-spacing: -0.02em; }
-.hero-dot { font-weight: 900; font-size: 5rem; }
-.card-shadow { box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
-.testimonial-bg { background: #0b0b0b; color: #fff; }
-.signature { font-family: 'Pacifico', cursive; } */
+  --color-primary: #014e5a;
+}
 
+@layer base {
+  /* Basic utilities used by the layout to recreate spacing and typography from screenshot */
+  /* .header-logo { font-weight: 800; letter-spacing: -0.02em; }
+    .hero-dot { font-weight: 900; font-size: 5rem; }
+    .card-shadow { box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+    .testimonial-bg { background: #0b0b0b; color: #fff; }
+    .signature { font-family: 'Pacifico', cursive; } */
 
-/* small helper to create rotated card stack like screenshot */
-.stack-card { transform: rotate(-8deg); }
-.stack-card:nth-child(2) { transform: rotate(2deg); }
-.stack-card:nth-child(3) { transform: rotate(-2deg); }
+  /* small helper to create rotated card stack like screenshot */
+  .stack-card {
+    transform: rotate(-8deg);
+  }
+  .stack-card:nth-child(2) {
+    transform: rotate(2deg);
+  }
+  .stack-card:nth-child(3) {
+    transform: rotate(-2deg);
+  }
+}

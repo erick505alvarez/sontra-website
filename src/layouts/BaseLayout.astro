@@ -1,4 +1,6 @@
 ---
+import "../styles/global.css";
+
 const { title = "Sontra.dev" } = Astro.props;
 ---
 
@@ -13,9 +15,8 @@ const { title = "Sontra.dev" } = Astro.props;
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/src/styles/global.css" />
   </head>
-  <body class="bg-white text-gray-900">
+  <body class="bg-white text-gray-900 font-body">
     <slot />
   </body>
 </html>
