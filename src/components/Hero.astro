@@ -1,26 +1,31 @@
 ---
+import { Image } from "astro:assets";
+import hero from "../images/hero.jpg";
 
+const heroImageHeight = 1000;
 ---
 
-<section class="max-w-(--max-width) mx-auto px-6 py-12">
-  <div class="text-center">
-    <h1 class="text-4xl md:text-5xl font-extrabold">
-      Simplifying complexity through
-    </h1>
-    <p class="text-xl italic mt-3">product strategy & design thinking.</p>
+<section
+  class="max-w-(--max-width) mx-auto px-6 text-primary relative min-h-120 flex flex-col py-10">
+  <div class="text-left w-[50%] flex flex-col justify-center pr-6 flex-1">
+    <!-- text container -->
+    <div class="relative -top-10">
+      <h1 class="text-4xl md:text-5xl font-extrabold">
+        Stop Chasing Leads.<br />Start Closing Jobs.
+      </h1>
+      <p class="text-lg italic mt-3">
+        Fill your calendar with qualified clients, booked appointments, and
+        5-star reviews – while you sleep.
+      </p>
+    </div>
   </div>
 
-  <div class="mt-10 flex justify-center gap-6 items-end">
-    <div class="w-56 h-44 bg-yellow-100 rounded-lg card-shadow p-4 stack-card">
-      Sticky note mock
-    </div>
-    <div
-      class="w-56 h-56 bg-black text-white rounded-lg card-shadow p-4 stack-card"
-    >
-      Black case study card
-    </div>
-    <div class="w-56 h-44 bg-green-100 rounded-lg card-shadow p-4 stack-card">
-      Photo card
-    </div>
+  <div class="flex justify-center gap-6 items-end w-1/2 absolute right-0 -z-10">
+    <Image
+      src={hero}
+      width={heroImageHeight}
+      height={heroImageHeight}
+      alt="buildings"
+    />
   </div>
 </section>
