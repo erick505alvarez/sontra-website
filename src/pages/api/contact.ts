@@ -3,10 +3,12 @@ import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY || "");
 
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async (context) => {
+  const { request } = context;
   const form = await request.formData();
   const name = form.get("name");
   const email = form.get("email");
+  const phone_number = form.get("phone_number");
   const message = form.get("message");
 
   // Prevent bots
@@ -15,7 +17,7 @@ export const POST: APIRoute = async ({ request }) => {
     return new Response("Bot detected", { status: 400 });
   }
 
-  if (!email || !message) {
+  if (!name || !phone_number) {
     return new Response(
       JSON.stringify({ success: false, error: "Missing fields." }),
       { status: 400 }
@@ -27,7 +29,7 @@ export const POST: APIRoute = async ({ request }) => {
       from: "Site <no-reply@yourdomain.com>",
       to: "you@yourdomain.com",
       subject: `New contact from ${name || "visitor"}`,
-      html: `<p><strong>From:</strong> ${name} &lt;${email}&gt;</p><p>${message}</p>`,
+      html: `<p><strong>From:</strong> ${name} &lt;${email}&gt;</p><p><strong>Phone Number:</strong> ${phone_number}</p><p>${message}</p>`,
     });
 
     // Redirect to booking page after successful submission

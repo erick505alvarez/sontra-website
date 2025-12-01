@@ -48,7 +48,7 @@ import picture from "../images/form-image.png";
         </p>
       </div>
       <input
-        type="email"
+        type="text"
         name="email"
         placeholder="Email"
         class="border rounded-lg p-3"
@@ -59,7 +59,6 @@ import picture from "../images/form-image.png";
       name="message"
       placeholder="How can we help you?"
       rows="6"
-      required
       class="border rounded-lg p-3 resize-none"></textarea>
       <!-- Honeypot field -->
       <div style="display:none;">
@@ -149,14 +148,63 @@ import picture from "../images/form-image.png";
     }
   });
 
+  function showError(message: string) {
+    let alert = document.getElementById("form-alert");
+    if (!alert) {
+      alert = document.createElement("p");
+      alert.id = "form-alert";
+      alert.className = "text-red-600 mt-3";
+      form?.appendChild(alert);
+    }
+    alert.textContent = message;
+  }
+
+  function showSuccess(message: string) {
+    let alert = document.getElementById("form-alert");
+    if (!alert) {
+      alert = document.createElement("p");
+      alert.id = "form-alert";
+      alert.className = "text-green-700 mt-3";
+      form?.appendChild(alert);
+    }
+    alert.textContent = message;
+  }
+
   // Form submission validation
-  form.addEventListener("submit", (e) => {
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault(); // Stop normal submission
+
     const isNameValid = validateName();
     const isPhoneValid = validatePhone();
 
-    if (!isNameValid || !isPhoneValid) {
-      e.preventDefault();
-      return false;
+    if (!isNameValid || !isPhoneValid) return;
+
+    const formData = new FormData(form);
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+
+        const msg = data?.error || "Something went wrong. Please try again.";
+        showError(msg);
+        return;
+      }
+
+      // If the server redirects (302), we must manually follow it
+      if (res.redirected) {
+        window.location.href = res.url;
+        return;
+      }
+
+      showSuccess("Message sent! Redirecting...");
+      setTimeout(() => (window.location.href = "/booking"), 500);
+    } catch (err) {
+      showError("Network error. Please try again.");
     }
   });
 </script>

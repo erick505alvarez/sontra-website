@@ -17,26 +17,26 @@ import Footer from "../components/Footer.astro";
       </p>
     </div>
 
-    <!-- Koalendar Inline Embed Start -->
-    <div id="inline-widget-meet-with-erick-alvarez"></div>
-    <script>
-      window.Koalendar =
-        window.Koalendar ||
-        function () {
-          (window.Koalendar.props = window.Koalendar.props || []).push(
-            arguments
-          );
-        };
-    </script>
-
-    <script async src="https://koalendar.com/assets/widget.js"></script>
-    <script>
-      window.Koalendar("inline", {
-        url: "https://koalendar.com/e/meet-with-erick-alvarez",
-        selector: "#inline-widget-meet-with-erick-alvarez",
-      });
-    </script>
-    <!-- Koalendar Inline Embed End -->
+    <div class="min-h-80">
+      <!-- Koalendar Inline Embed Start -->
+      <div id="inline-widget-erick-alvarez"></div>
+      <script is:inline>
+        window.Koalendar =
+          window.Koalendar ||
+          function () {
+            (Koalendar.props = Koalendar.props || []).push(arguments);
+          };
+      </script>
+      <script async is:inline src="https://koalendar.com/assets/widget.js">
+      </script>
+      <script is:inline>
+        Koalendar("inline", {
+          url: "https://koalendar.com/u/erick-alvarez",
+          selector: "#inline-widget-erick-alvarez",
+        });
+      </script>
+      <!-- Koalendar Inline Embed End -->
+    </div>
   </main>
   <Footer />
 </BaseLayout>

@@ -3,6 +3,8 @@ import { defineMiddleware } from "astro:middleware";
 // Very simple in-memory rate limiter
 const requests = new Map<string, { count: number; time: number }>();
 
+const LIMIT = 100;
+
 export const onRequest = defineMiddleware(async (context, next) => {
   const { request } = context;
   const ip =
@@ -17,7 +19,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
     // Within 1 minute window
     record.count++;
 
-    if (record.count > 20) {
+    if (record.count > LIMIT) {
       return new Response("Too many requests", { status: 429 });
     }
   } else {
