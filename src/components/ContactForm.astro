@@ -1,33 +1,157 @@
 ---
-
+import { Image } from "astro:assets";
+import picture from "../images/form-image.png";
 ---
 
-<section id="contact" class="max-w-(--max-width) mx-auto px-6 py-12">
-  <h3 class="text-xl font-bold mb-4">Contact</h3>
-  <form method="POST" action="/api/contact" class="grid gap-4 max-w-xl">
-    <input
-      type="text"
-      name="name"
-      placeholder="Your name"
-      required
-      class="border rounded p-3"
-    />
-    <input
-      type="email"
-      name="email"
-      placeholder="Email"
-      required
-      class="border rounded p-3"
-    />
-    <textarea
+<section
+  id="contact"
+  class="max-w-(--max-width) mx-auto px-6 pb-12 flex gap-10">
+  <!-- left side -->
+  <div class="w-1/2" id="contact">
+    <h3 class="text-xl font-bold mb-4">Book a Call</h3>
+    <form
+      id="contact-form"
+      method="POST"
+      action="/api/contact"
+      class="grid gap-4 max-w-xl">
+      <div>
+        <input
+          type="text"
+          id="name-input"
+          name="name"
+          placeholder="Your Name"
+          required
+          class="border rounded-lg p-3 w-full"
+          aria-describedby="name-error"
+        />
+        <p
+          id="name-error"
+          class="text-red-600 text-sm mt-1 hidden"
+          role="alert">
+        </p>
+      </div>
+      <div>
+        <input
+          type="text"
+          id="phone-input"
+          name="phone_number"
+          placeholder="Phone Number"
+          class="border rounded-lg p-3 w-full"
+          required
+          aria-describedby="phone-error"
+        />
+        <p
+          id="phone-error"
+          class="text-red-600 text-sm mt-1 hidden"
+          role="alert">
+        </p>
+      </div>
+      <input
+        type="email"
+        name="email"
+        placeholder="Email"
+        class="border rounded-lg p-3"
+      />
+      <!-- ignore the textarea tag to prevent whitespace appearing inside textarea -->
+      <!-- prettier-ignore -->
+      <textarea
       name="message"
       placeholder="Message"
       rows="6"
       required
-      class="border rounded p-3">
-    </textarea>
-    <button type="submit" class="bg-black text-white px-4 py-2 rounded">
-      Send
-    </button>
-  </form>
+      class="border rounded-lg p-3 resize-none"></textarea>
+      <button
+        type="submit"
+        class="bg-gray-900 text-white px-4 py-2 rounded-lg cursor-pointer">
+        Boost My Sales
+      </button>
+    </form>
+  </div>
+  <!-- right side -->
+  <div class="flex justify-center items-center p-6 flex-1">
+    <Image src={picture} alt="productivity" class="" />
+  </div>
 </section>
+
+<script>
+  // Get form and input elements
+  const form = document.getElementById(
+    "contact-form"
+  ) as HTMLFormElement | null;
+  const nameInput = document.getElementById(
+    "name-input"
+  ) as HTMLInputElement | null;
+  const phoneInput = document.getElementById(
+    "phone-input"
+  ) as HTMLInputElement | null;
+  const nameError = document.getElementById(
+    "name-error"
+  ) as HTMLParagraphElement | null;
+  const phoneError = document.getElementById(
+    "phone-error"
+  ) as HTMLParagraphElement | null;
+
+  // Early return if elements are not found
+  if (!form || !nameInput || !phoneInput || !nameError || !phoneError) {
+    console.error("Contact form elements not found");
+    throw new Error("Contact form elements not found");
+  }
+
+  // At this point, TypeScript knows all elements are non-null
+  // Validation functions
+  function validateName(): boolean {
+    const name = nameInput!.value.trim();
+    if (!name) {
+      nameError!.textContent = "Name is required";
+      nameError!.classList.remove("hidden");
+      nameInput!.classList.add("border-red-500");
+      return false;
+    }
+    nameError!.classList.add("hidden");
+    nameInput!.classList.remove("border-red-500");
+    return true;
+  }
+
+  function validatePhone(): boolean {
+    const phone = phoneInput!.value.trim();
+    if (!phone) {
+      phoneError!.textContent = "Phone number is required";
+      phoneError!.classList.remove("hidden");
+      phoneInput!.classList.add("border-red-500");
+      return false;
+    }
+    phoneError!.classList.add("hidden");
+    phoneInput!.classList.remove("border-red-500");
+    return true;
+  }
+
+  // Real-time validation on blur
+  nameInput.addEventListener("blur", validateName);
+  phoneInput.addEventListener("blur", validatePhone);
+
+  // Clear errors on input
+  nameInput.addEventListener("input", () => {
+    if (nameError!.textContent) {
+      nameError!.classList.add("hidden");
+      nameInput!.classList.remove("border-red-500");
+    }
+  });
+
+  phoneInput.addEventListener("input", () => {
+    if (phoneError!.textContent) {
+      phoneError!.classList.add("hidden");
+      phoneInput!.classList.remove("border-red-500");
+    }
+  });
+
+  // Form submission validation
+  form.addEventListener("submit", (e) => {
+    const isNameValid = validateName();
+    const isPhoneValid = validatePhone();
+
+    if (!isNameValid || !isPhoneValid) {
+      e.preventDefault();
+      return false;
+    }
+  });
+</script>
