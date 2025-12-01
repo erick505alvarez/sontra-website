@@ -1,0 +1,42 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+---
+
+<BaseLayout title="Book a Call - Sontra.dev">
+  <Header />
+  <main class="max-w-(--max-width) mx-auto px-6">
+    <div class="text-center mb-8">
+      <h1 class="text-3xl md:text-4xl font-bold font-heading mb-4">
+        Book a Call
+      </h1>
+      <p class="text-gray-600">
+        Select a time that works best for you and let's discuss how we can help
+        you
+      </p>
+    </div>
+
+    <!-- Koalendar Inline Embed Start -->
+    <div id="inline-widget-meet-with-erick-alvarez"></div>
+    <script>
+      window.Koalendar =
+        window.Koalendar ||
+        function () {
+          (window.Koalendar.props = window.Koalendar.props || []).push(
+            arguments
+          );
+        };
+    </script>
+
+    <script async src="https://koalendar.com/assets/widget.js"></script>
+    <script>
+      window.Koalendar("inline", {
+        url: "https://koalendar.com/e/meet-with-erick-alvarez",
+        selector: "#inline-widget-meet-with-erick-alvarez",
+      });
+    </script>
+    <!-- Koalendar Inline Embed End -->
+  </main>
+  <Footer />
+</BaseLayout>

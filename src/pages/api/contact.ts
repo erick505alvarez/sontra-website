@@ -24,7 +24,13 @@ export const POST: APIRoute = async ({ request }) => {
       html: `<p><strong>From:</strong> ${name} &lt;${email}&gt;</p><p>${message}</p>`,
     });
 
-    return new Response(JSON.stringify({ success: true }), { status: 200 });
+    // Redirect to booking page after successful submission
+    return new Response(null, {
+      status: 302,
+      headers: {
+        Location: "/booking",
+      },
+    });
   } catch (err: any) {
     return new Response(
       JSON.stringify({ success: false, error: err.message }),
