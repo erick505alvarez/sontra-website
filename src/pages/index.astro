@@ -1,4 +1,5 @@
 ---
+import type { ImageMetadata } from "astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Header from "../components/Header.astro";
 import Hero from "../components/Hero.astro";
@@ -8,26 +9,53 @@ import About from "../components/About.astro";
 import ContactForm from "../components/ContactForm.astro";
 import Footer from "../components/Footer.astro";
 
+// Dynamically import all images from the images directory
+// Using import.meta.glob with eager: true loads all images at build time
+// This returns an object where keys are file paths and values are ImageMetadata objects
+const imageModules = import.meta.glob<{ default: ImageMetadata }>(
+  "../images/*.{jpg,jpeg,png,gif,webp}",
+  {
+    eager: true,
+  }
+);
+
+// Create a helper function to get an image by filename
+// Returns the ImageMetadata object that Astro's Image component expects
+function getImage(filename: string): ImageMetadata | undefined {
+  // Construct the path that matches the glob pattern
+  const path = `../images/${filename}`;
+  // Access the default export from the module
+  return imageModules[path]?.default;
+}
+
 const projects = [
   {
-    title: "AI Low-code Platform Builder",
-    description: "AI, Low-code, Platform Builder",
-    img: "/placeholders/p1.jpg",
+    title: "Smart Lead Generation",
+    subtitle: "Always-On Advertising That Actually Converts",
+    img: getImage("audience.jpg"),
+    description:
+      "We run targeted ads that reach homeowners ready to hire, then our AI instantly engages them—qualifying serious prospects and filtering out tire-kickers before they ever reach you.",
   },
   {
-    title: "Flex’d Fitness App Concept",
-    description: "Mobile app concept",
-    img: "/placeholders/p2.jpg",
+    title: "Intelligent Lead Qualification",
+    subtitle: "Only Talk to Clients Ready to Buy",
+    img: getImage("calendar.jpg"),
+    description:
+      "Our AI agents ask the right questions, verify project details, and assess budget fit in real-time. You only hear from leads that match your ideal job criteria.",
   },
   {
-    title: "Corporate Intranet Redesign",
-    description: "Design system work",
-    img: "/placeholders/p3.jpg",
+    title: "Automatic Appointment Booking",
+    subtitle: "Your Calendar Fills Itself",
+    img: getImage("transaction.jpg"),
+    description:
+      "Qualified leads get booked directly into your schedule based on your availability. No phone tag, no back-and-forth texts—just confirmed appointments ready for your arrival.",
   },
   {
-    title: "AI-Powered Parking System for UMD",
-    description: "Embedded & Mobile",
-    img: "/placeholders/p4.jpg",
+    title: "Review Generation System",
+    subtitle: "Turn Every Job Into Your Next Referral",
+    img: getImage("review.jpg"),
+    description:
+      "After project completion, our system automatically follows up with clients and guides them to leave 5-star reviews. Build your reputation while you focus on the next job.",
   },
 ];
 ---
