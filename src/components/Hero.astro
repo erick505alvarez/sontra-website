@@ -1,13 +1,14 @@
 ---
 import { Image } from "astro:assets";
-import hero from "../images/contract-hero.png";
+import hero from "../images/contractor-hero.png";
 
 const heroImageHeight = 1000;
 ---
 
 <section
-  class="max-w-(--max-width) mx-auto px-6 text-black relative min-h-120 flex py-10 overflow-hidden">
-  <div class="text-left w-[50%] flex flex-col justify-center pr-6 flex-1">
+  class="max-w-(--max-width) mx-auto px-6 text-black relative min-h-120 flex flex-col md:flex-row py-10 overflow-hidden">
+  <!-- left side -->
+  <div class="text-left md:w-1/2 flex flex-col justify-center pr-6 flex-1">
     <!-- text container -->
     <div class="relative -top-10">
       <h1 class="text-4xl md:text-5xl font-extrabold font-heading">
@@ -25,7 +26,9 @@ const heroImageHeight = 1000;
     </a>
   </div>
 
-  <div class="flex justify-center gap-6 items-end w-1/2 relative right-0 -z-10">
+  <!-- right side -->
+  <div
+    class="flex justify-center gap-6 items-end md:w-1/2 relative right-0 -z-10">
     <Image
       src={hero}
       width={heroImageHeight}
