@@ -13,7 +13,8 @@ import picture from "../images/form-image.png";
       id="contact-form"
       method="POST"
       action="/api/contact"
-      class="grid gap-4 max-w-xl">
+      class="grid gap-4 max-w-xl"
+      autocomplete="off">
       <div>
         <input
           type="text"
@@ -60,6 +61,10 @@ import picture from "../images/form-image.png";
       rows="6"
       required
       class="border rounded-lg p-3 resize-none"></textarea>
+      <!-- Honeypot field -->
+      <div style="display:none;">
+        <input type="text" name="honeypot" tabindex="-1" autocomplete="off" />
+      </div>
       <button
         type="submit"
         class="bg-gray-900 text-white px-4 py-2 rounded-lg cursor-pointer">

@@ -9,6 +9,12 @@ export const POST: APIRoute = async ({ request }) => {
   const email = form.get("email");
   const message = form.get("message");
 
+  // Prevent bots
+  const honeypot = form.get("honeypot");
+  if (honeypot) {
+    return new Response("Bot detected", { status: 400 });
+  }
+
   if (!email || !message) {
     return new Response(
       JSON.stringify({ success: false, error: "Missing fields." }),
