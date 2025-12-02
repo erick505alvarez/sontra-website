@@ -30,12 +30,17 @@ export const POST: APIRoute = async (context) => {
   }
 
   try {
-    await resend.emails.send({
+    const response = await resend.emails.send({
       from: "sontra.dev <no-reply@contactsontra.dev>",
       to: "erickalvarez.official@gmail.com",
       subject: `New contact from ${name || "visitor"}`,
       html: `<p><strong>From:</strong> ${name} &lt;${email}&gt;</p><p><strong>Phone Number:</strong> ${phone_number}</p><p>${message}</p>`,
     });
+
+    const { error } = response;
+    if (error?.statusCode === 401 || error?.statusCode === 403) {
+      console.error("Authentication error:", error.statusCode);
+    }
 
     // Redirect to booking page after successful submission
     return new Response(null, {
@@ -45,6 +50,7 @@ export const POST: APIRoute = async (context) => {
       },
     });
   } catch (err: any) {
+    console.error(`Failed to send email: ${err}`);
     return new Response(
       JSON.stringify({ success: false, error: err.message }),
       { status: 500 }
