@@ -1,7 +1,12 @@
 import type { APIRoute } from "astro";
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY || "");
+if (!import.meta.env.RESEND_API_KEY) {
+  console.error("Missing RESEND_API_KEY in environment variables.");
+  throw new Error("RESEND_API_KEY is required");
+}
+
+const resend = new Resend(import.meta.env.RESEND_API_KEY);
 
 export const POST: APIRoute = async (context) => {
   const { request } = context;
@@ -26,8 +31,8 @@ export const POST: APIRoute = async (context) => {
 
   try {
     await resend.emails.send({
-      from: "Site <no-reply@yourdomain.com>",
-      to: "you@yourdomain.com",
+      from: "sontra.dev <no-reply@contactsontra.dev>",
+      to: "erickalvarez.official@gmail.com",
       subject: `New contact from ${name || "visitor"}`,
       html: `<p><strong>From:</strong> ${name} &lt;${email}&gt;</p><p><strong>Phone Number:</strong> ${phone_number}</p><p>${message}</p>`,
     });
