@@ -5,8 +5,12 @@ if (!import.meta.env.RESEND_API_KEY) {
   console.error("Missing RESEND_API_KEY in environment variables.");
   throw new Error("RESEND_API_KEY is required");
 }
-
+if (!import.meta.env.RESEND_EMAIL_DOMAIN) {
+  throw new Error("RESEND_EMAIL_DOMAIN is required");
+}
 const resend = new Resend(import.meta.env.RESEND_API_KEY);
+const resend_domain = import.meta.env.RESEND_EMAIL_DOMAIN;
+const target_inbox = import.meta.env.TARGET_INBOX;
 
 export const POST: APIRoute = async (context) => {
   const { request } = context;
@@ -31,15 +35,17 @@ export const POST: APIRoute = async (context) => {
 
   try {
     const response = await resend.emails.send({
-      from: "sontra.dev <no-reply@contactsontra.dev>",
-      to: "erickalvarez.official@gmail.com",
+      from: `sontra.dev <no-reply@${resend_domain}>`,
+      to: `${target_inbox}`,
       subject: `New contact from ${name || "visitor"}`,
       html: `<p><strong>From:</strong> ${name} &lt;${email}&gt;</p><p><strong>Phone Number:</strong> ${phone_number}</p><p>${message}</p>`,
     });
 
     const { error } = response;
     if (error?.statusCode === 401 || error?.statusCode === 403) {
-      console.error("Authentication error:", error.statusCode);
+      console.error(
+        `Authentication error ${error.statusCode}: ${error.message}`
+      );
     }
 
     // Redirect to booking page after successful submission

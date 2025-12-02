@@ -16,6 +16,7 @@ import picture from "../images/form-image.png";
       action="/api/contact"
       class="grid gap-4 md:max-w-xl"
       autocomplete="off">
+      <!-- name -->
       <div>
         <input
           type="text"
@@ -32,6 +33,7 @@ import picture from "../images/form-image.png";
           role="alert">
         </p>
       </div>
+      <!-- phone number -->
       <div>
         <input
           type="text"
@@ -48,6 +50,7 @@ import picture from "../images/form-image.png";
           role="alert">
         </p>
       </div>
+      <!-- email -->
       <input
         type="text"
         name="email"
@@ -65,6 +68,7 @@ import picture from "../images/form-image.png";
       <div style="display:none;">
         <input type="text" name="honeypot" tabindex="-1" autocomplete="off" />
       </div>
+      <!-- submit button -->
       <button
         type="submit"
         class="bg-gray-900 text-white px-4 py-2 rounded-lg cursor-pointer">
@@ -125,6 +129,29 @@ import picture from "../images/form-image.png";
       phoneInput!.classList.add("border-red-500");
       return false;
     }
+
+    // Remove all non-digit characters (for length check)
+    const digitsOnly = phone.replace(/\D/g, "");
+    // Check: at least 10 digits (adjust based on your region)
+    if (digitsOnly.length < 10) {
+      phoneError!.textContent =
+        "Please enter a valid phone number (e.g. (123) 456-7890)";
+      phoneError!.classList.remove("hidden");
+      phoneInput!.classList.add("border-red-500");
+      return false;
+    }
+    // Optional: validate format with a loose pattern
+    // Allows: +1 (123) 456-7890, 123-456-7890, (123) 456 7890, etc.
+    const phonePattern = /^[\+]?[0-9\s\-\(\)]{10,}$/;
+    if (!phonePattern.test(phone)) {
+      phoneError!.textContent =
+        "Please use a valid phone format (e.g. (123) 456-7890)";
+      phoneError!.classList.remove("hidden");
+      phoneInput!.classList.add("border-red-500");
+      return false;
+    }
+
+    // Success
     phoneError!.classList.add("hidden");
     phoneInput!.classList.remove("border-red-500");
     return true;
@@ -151,6 +178,7 @@ import picture from "../images/form-image.png";
 
   function showError(message: string) {
     let alert = document.getElementById("form-alert");
+    // Add element to DOM
     if (!alert) {
       alert = document.createElement("p");
       alert.id = "form-alert";
@@ -162,6 +190,7 @@ import picture from "../images/form-image.png";
 
   function showSuccess(message: string) {
     let alert = document.getElementById("form-alert");
+    // Add element to DOM
     if (!alert) {
       alert = document.createElement("p");
       alert.id = "form-alert";
