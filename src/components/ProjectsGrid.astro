@@ -4,7 +4,9 @@ const projects = Astro.props.projects;
 ---
 
 <section id="work" class="max-w-(--max-width) mx-auto px-6 py-8">
-  <h2 class="text-3xl font-bold mb-8 text-black">Your AI Partner</h2>
+  <h2 class="text-3xl font-bold mb-8 text-black font-heading">
+    Your AI Partner
+  </h2>
   <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
     {projects.map((p) => <ProjectCard {...p} />)}
   </div>
