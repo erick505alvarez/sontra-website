@@ -9,7 +9,7 @@ import picture from "../images/form-image.webp";
   <!-- left side -->
 
   <div class="md:w-1/2" id="contact">
-    <h3 class="text-xl font-bold mb-4">Book a Call</h3>
+    <h3 class="text-xl font-bold mb-4">Book a Free Consultation</h3>
     <form
       id="contact-form"
       method="POST"
@@ -33,6 +33,13 @@ import picture from "../images/form-image.webp";
           role="alert">
         </p>
       </div>
+      <!-- business name -->
+      <input
+        type="text"
+        name="business_name"
+        placeholder="Business Name"
+        class="border rounded-lg p-3"
+      />
       <!-- phone number -->
       <div>
         <input
@@ -50,6 +57,7 @@ import picture from "../images/form-image.webp";
           role="alert">
         </p>
       </div>
+
       <!-- email -->
       <input
         type="text"
@@ -78,7 +86,7 @@ import picture from "../images/form-image.webp";
   </div>
   <!-- right side -->
   <div
-    class="flex justify-center items-center p-6 flex-1 max-h-full max-w-[60%]">
+    class="flex justify-center items-center p-6 flex-1 max-h-full md:max-w-[60%]">
     <Image src={picture} alt="productivity" class="max-h-full" />
   </div>
 </section>

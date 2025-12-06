@@ -15,9 +15,10 @@ const target_inbox = import.meta.env.TARGET_INBOX;
 export const POST: APIRoute = async (context) => {
   const { request } = context;
   const form = await request.formData();
-  const name = form.get("name");
+  const name = form.get("name"); // Required
+  const business_name = form.get("business_name");
+  const phone_number = form.get("phone_number"); // Required
   const email = form.get("email");
-  const phone_number = form.get("phone_number");
   const message = form.get("message");
 
   // Prevent bots
@@ -38,7 +39,10 @@ export const POST: APIRoute = async (context) => {
       from: `sontra.dev <no-reply@${resend_domain}>`,
       to: `${target_inbox}`,
       subject: `New contact from ${name || "visitor"}`,
-      html: `<p><strong>From:</strong> ${name} &lt;${email}&gt;</p><p><strong>Phone Number:</strong> ${phone_number}</p><p>${message}</p>`,
+      html: `<p><strong>From:</strong> ${name} &lt;${email}&gt;</p>
+      <p><strong>Business Name:</strong> ${business_name}</p>
+      <p><strong>Phone Number:</strong> ${phone_number}</p>
+      <p>${message}</p>`,
     });
 
     const { error } = response;
