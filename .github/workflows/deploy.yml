@@ -20,7 +20,7 @@ jobs:
           username: ${{ secrets.VPS_USERNAME }}
           key: ${{ secrets.VPS_SSH_KEY }}
           port: 22
-          # Pass secrets as environment variables to the script
+          # Pass secrets as environment variables to the VPS script
           envs: RESEND_API_KEY,RESEND_EMAIL_DOMAIN,TARGET_INBOX
           script: |
             export RESEND_API_KEY="${{ secrets.RESEND_API_KEY }}"
