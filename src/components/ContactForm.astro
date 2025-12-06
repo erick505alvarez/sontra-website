@@ -1,11 +1,11 @@
 ---
 import { Image } from "astro:assets";
-import picture from "../images/form-image.png";
+import picture from "../images/form-image.webp";
 ---
 
 <section
   id="contact"
-  class="max-w-(--max-width) mx-auto px-6 pb-12 flex flex-col md:flex-row gap-10">
+  class="max-w-(--max-width) mx-auto px-6 pb-12 flex flex-col md:flex-row gap-10 min-h-120">
   <!-- left side -->
 
   <div class="md:w-1/2" id="contact">
@@ -77,8 +77,9 @@ import picture from "../images/form-image.png";
     </form>
   </div>
   <!-- right side -->
-  <div class="flex justify-center items-center p-6 flex-1">
-    <Image src={picture} alt="productivity" class="" />
+  <div
+    class="flex justify-center items-center p-6 flex-1 max-h-full max-w-[60%]">
+    <Image src={picture} alt="productivity" class="max-h-full" />
   </div>
 </section>
 
