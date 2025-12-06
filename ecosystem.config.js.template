@@ -1,0 +1,19 @@
+module.exports = {
+  apps : [{
+    name   : "sontra-website",
+    // This runs the 'start' script from your package.json
+    script : "npm", 
+    args   : "start",
+    // The directory where PM2 executes the script
+    cwd    : "/var/www/sontra-website",
+    // Environment variables are securely injected into the process
+    env_production: {
+      "NODE_ENV": "production",
+      "PORT": 4321, // Define the port for NGINX to proxy to
+
+      "RESEND_API_KEY": "insert_resend_key_here",
+      "RESEND_EMAIL_DOMAIN": ""
+      "TARGET_INBOX": ""
+    }
+  }]
+};
