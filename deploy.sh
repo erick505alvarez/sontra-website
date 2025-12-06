@@ -161,7 +161,7 @@ else
         echo -e "${GREEN}✅ Successfully rolled back to ${PREVIOUS_COMMIT}${NC}"
     else
         echo -e "${RED}❌ Rollback failed! Manual intervention required.${NC}"
-        echo -e "${RED}📞 Contact: erick@sontra.dev${NC}"
+        echo -e "${RED}📞 Contact: erick@contactsontra.dev${NC}"
     fi
     
     exit 1
