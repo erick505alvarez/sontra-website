@@ -31,6 +31,32 @@ touch "$LOCK_FILE"
 # Ensure lock is removed on exit (success or failure)
 trap "rm -f $LOCK_FILE" EXIT
 
+# ===== START: Validate environment variables =====
+echo -e "${YELLOW}🔐 Validating environment variables...${NC}"
+
+if [ -z "$RESEND_API_KEY" ]; then
+    echo -e "${RED}❌ Error: RESEND_API_KEY not set${NC}"
+    exit 1
+fi
+
+if [ -z "$RESEND_EMAIL_DOMAIN" ]; then
+    echo -e "${RED}❌ Error: RESEND_EMAIL_DOMAIN not set${NC}"
+    exit 1
+fi
+
+if [ -z "$TARGET_INBOX" ]; then
+    echo -e "${RED}❌ Error: TARGET_INBOX not set${NC}"
+    exit 1
+fi
+
+echo -e "${GREEN}✅ Environment variables validated${NC}"
+
+# Export for docker-compose to use
+export RESEND_API_KEY
+export RESEND_EMAIL_DOMAIN
+export TARGET_INBOX
+# ===== END Validate environment variables =====
+
 # Check for force flag
 FORCE_REBUILD=false
 if [ "$1" = "--force" ] || [ "$1" = "-f" ]; then
