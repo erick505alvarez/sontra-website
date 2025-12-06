@@ -1,0 +1,32 @@
+export default {
+  apps: [
+    {
+      name: "sontra-website",
+      // This runs the 'start' script from your package.json
+      script: "npm",
+      args: "start",
+      // The directory where PM2 executes the script
+      cwd: "/var/www/sontra-website",
+      exec_mode: "fork",
+      interpreter: "node",
+      interpreter_args: "--loader ts-node/esm",
+
+      // --- Secure Environment Variables ---
+      env: {
+        NODE_ENV: "development",
+        // Include any dev-only variables here
+      },
+
+      env_production: {
+        // STANDARD NODE/ASTRO VARIABLES
+        NODE_ENV: "production",
+        PORT: 4321, // Define the port for NGINX to proxy to
+        NVM_DIR: "/home/deployer/.nvm", // Ensures PM2 finds the NVM-installed Node runtime
+
+        RESEND_API_KEY: "",
+        RESEND_EMAIL_DOMAIN: "",
+        TARGET_INBOX: "",
+      },
+    },
+  ],
+};
