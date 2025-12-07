@@ -4,12 +4,12 @@ import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 ---
 
-<BaseLayout title="Book a Call - Sontra.dev">
+<BaseLayout title="Book a Free Consultation - sontra.dev">
   <Header />
   <main class="max-w-(--max-width) mx-auto px-6 grow min-h-120">
     <div class="text-center mb-8">
       <h1 class="text-3xl md:text-4xl font-bold font-heading mb-4">
-        Book a Call
+        Book a Free Consultation
       </h1>
       <p class="text-gray-600">
         Select a time that works best for you and let's discuss how we can help
@@ -27,8 +27,8 @@ import Footer from "../components/Footer.astro";
             (Koalendar.props = Koalendar.props || []).push(arguments);
           };
       </script>
-      <script async is:inline src="https://koalendar.com/assets/widget.js"
-      ></script>
+      <script async is:inline src="https://koalendar.com/assets/widget.js">
+      </script>
       <script is:inline>
         Koalendar("inline", {
           url: "https://koalendar.com/u/erick-alvarez",

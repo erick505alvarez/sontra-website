@@ -114,7 +114,14 @@ cd /var/www/sontra || exit 1
 
 # Build new Docker image
 echo -e "${YELLOW}🔨 Building Docker image...${NC}"
-docker compose build --no-cache astro-web
+# only use --no-cache flag on FORCE_REBUILD
+if [ "$FORCE_REBUILD" = true ]; then
+    echo -e "${YELLOW}🔨 Force rebuild (no cache)...${NC}"
+    docker compose build --no-cache astro-web
+else
+    echo -e "${YELLOW}🔨 Building (with cache)...${NC}"
+    docker compose build astro-web
+fi
 
 # Stop old container
 echo -e "${YELLOW}🛑 Stopping old container...${NC}"
@@ -164,9 +171,16 @@ if docker compose ps | grep -q "Up" && curl -f -s -o /dev/null http://localhost:
     echo -e "${YELLOW}📋 Recent container logs:${NC}"
     cd /var/www/sontra
     docker compose logs --tail=20 astro-web
+
+    # Prune docker images older than 24hrs
+    # Delete data volumes too
+    # echo -e "${YELLOW}🧹 Cleaning up old Docker images...${NC}"
+    # docker system prune -f --filter "until=24h"
+    # echo -e "${GREEN}✅ Cleanup complete${NC}"
     
     exit 0
 else
+    # Rollback to previous commit
     echo -e "${RED}❌ Deployment failed! Container is not responding after ${MAX_WAIT} seconds.${NC}"
     echo -e "${YELLOW}📋 Container logs:${NC}"
     docker compose logs --tail=50 astro-web
@@ -176,6 +190,7 @@ else
     cd /var/www/sontra/sontra-website
     git reset --hard "$PREVIOUS_COMMIT"
     cd /var/www/sontra
+
     docker compose build astro-web
     docker compose up -d
     
