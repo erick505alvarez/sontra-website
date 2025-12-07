@@ -74,6 +74,9 @@ COPY --from=builder --chown=astro:nodejs /app/node_modules ./node_modules
 # package.json needed if start script references it
 COPY --from=builder --chown=astro:nodejs /app/package.json ./package.json
 
+# Copy the env variable validation script
+COPY --from=builder --chown=astro:nodejs /app/scripts/check-env.js ./scripts/check-env.js
+
 # Switch to non-root user (security best practice)
 # All subsequent commands run as this user inside the container
 USER astro
@@ -86,4 +89,6 @@ EXPOSE 4321
 # Use direct node execution (NOT "npm start") for better signal handling
 # The path dist/server/entry.mjs is standard for @astrojs/node adapter
 # If this path is wrong after building, check dist/ folder structure
-CMD ["node", "./dist/server/entry.mjs"]
+# 1. Run the check script first
+# 2. If it succeeds (&&), start the server
+CMD ["sh", "-c", "node ./scripts/check-env.js && node ./dist/server/entry.mjs"]

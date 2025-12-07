@@ -1,16 +1,37 @@
+// astro.config.mjs
+
 // Enable TypeScript type checking in this JavaScript file
 // @ts-check
 // Import Astro's configuration helper function
-import { defineConfig } from "astro/config";
+import { defineConfig, envField } from "astro/config";
 // Import Node.js adapter for server-side rendering and API routes
 import node from "@astrojs/node";
-
 // Import Tailwind CSS Vite plugin for Tailwind v4 integration
 import tailwindcss from "@tailwindcss/vite";
 
 // https://astro.build/config
 // Export the Astro configuration object
 export default defineConfig({
+  // configure schema for env variable
+  env: {
+    schema: {
+      RESEND_API_KEY: envField.string({
+        context: "server",
+        access: "secret",
+        optional: false,
+      }),
+      RESEND_EMAIL_DOMAIN: envField.string({
+        context: "server",
+        access: "secret",
+        optional: false,
+      }),
+      TARGET_INBOX: envField.string({
+        context: "server",
+        access: "secret",
+        optional: false,
+      }),
+    },
+  },
   // Configure output mode for server-side rendering
   // This enables API routes and dynamic rendering
   output: "server",

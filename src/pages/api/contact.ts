@@ -1,16 +1,16 @@
+// Src/pages/api/contact.ts
+import {
+  RESEND_API_KEY,
+  RESEND_EMAIL_DOMAIN,
+  TARGET_INBOX,
+} from "astro:env/server";
 import type { APIRoute } from "astro";
 import { Resend } from "resend";
 
-if (!import.meta.env.RESEND_API_KEY) {
-  console.error("Missing RESEND_API_KEY in environment variables.");
-  throw new Error("RESEND_API_KEY is required");
-}
-if (!import.meta.env.RESEND_EMAIL_DOMAIN) {
-  throw new Error("RESEND_EMAIL_DOMAIN is required");
-}
-const resend = new Resend(import.meta.env.RESEND_API_KEY);
-const resend_domain = import.meta.env.RESEND_EMAIL_DOMAIN;
-const target_inbox = import.meta.env.TARGET_INBOX;
+// Load env variables
+const resend = new Resend(RESEND_API_KEY);
+const resend_domain = RESEND_EMAIL_DOMAIN;
+const target_inbox = TARGET_INBOX;
 
 export const POST: APIRoute = async (context) => {
   const { request } = context;
