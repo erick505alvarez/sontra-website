@@ -112,8 +112,8 @@ fi
 # Navigate to parent directory for docker-compose
 cd /var/www/sontra || exit 1
 
-# Build new Docker image
-echo -e "${YELLOW}🔨 Building Docker image...${NC}"
+# Build new Docker image (ONLY for astro-web)
+echo -e "${YELLOW}🔨 Building Docker image for Astro website...${NC}"
 # only use --no-cache flag on FORCE_REBUILD
 if [ "$FORCE_REBUILD" = true ]; then
     echo -e "${YELLOW}🔨 Force rebuild (no cache)...${NC}"
@@ -123,16 +123,21 @@ else
     docker compose build astro-web
 fi
 
-# Stop old container
-echo -e "${YELLOW}🛑 Stopping old container...${NC}"
-docker compose down
+# Stop ONLY the astro-web container (keeps n8n running!)
+echo -e "${YELLOW}🛑 Stopping Astro container (n8n stays running)...${NC}"
+docker compose stop astro-web
+docker compose rm -f astro-web
 
-# Start new container
-echo -e "${YELLOW}🚀 Starting new container...${NC}"
-docker compose up -d
+# Start new Astro container (n8n remains untouched)
+echo -e "${YELLOW}🚀 Starting new Astro container...${NC}"
+docker compose up -d astro-web
+
+# Ensure n8n is running (start if not, but don't restart if already up)
+echo -e "${YELLOW}🔄 Ensuring n8n is running...${NC}"
+docker compose up -d n8n
 
 # Wait for container to be ready with proper health check
-echo -e "${YELLOW}⏳ Waiting for container to be ready...${NC}"
+echo -e "${YELLOW}⏳ Waiting for Astro container to be ready...${NC}"
 
 MAX_WAIT=120  # Maximum wait time in seconds (2 minutes)
 WAIT_INTERVAL=3  # Check every 3 seconds
@@ -143,7 +148,7 @@ while [ $ELAPSED -lt $MAX_WAIT ]; do
     if docker compose ps | grep -q "sontra-website.*Up"; then
         # Container is up, now check if it's actually responding
         if curl -f -s -o /dev/null http://localhost:4321; then
-            echo -e "${GREEN}✅ Container is ready and responding!${NC}"
+            echo -e "${GREEN}✅ Astro container is ready and responding!${NC}"
             echo -e "${BLUE}⏱️  Took ${ELAPSED} seconds to start${NC}"
             break
         else
@@ -158,24 +163,30 @@ while [ $ELAPSED -lt $MAX_WAIT ]; do
 done
 
 # Final health check
-if docker compose ps | grep -q "Up" && curl -f -s -o /dev/null http://localhost:4321; then
+if docker compose ps | grep -q "sontra-website.*Up" && curl -f -s -o /dev/null http://localhost:4321; then
     echo -e "${GREEN}✅ Deployment successful!${NC}"
     echo -e "${GREEN}🌐 Site is live at https://sontra.dev${NC}"
+    
+    # Check n8n status unaffected
+    if docker compose ps | grep -q "n8n.*Up"; then
+        echo -e "${GREEN}✅ n8n is running at https://n8n.sontra.dev${NC}"
+    else
+        echo -e "${YELLOW}⚠️  n8n is not running (may need manual start)${NC}"
+    fi
     
     # Show recent commits
     echo -e "${YELLOW}📝 Recent commits:${NC}"
     cd /var/www/sontra/sontra-website
     git log --oneline -3
     
-    # Show logs
-    echo -e "${YELLOW}📋 Recent container logs:${NC}"
+    # Show logs for Astro only
+    echo -e "${YELLOW}📋 Recent Astro container logs:${NC}"
     cd /var/www/sontra
     docker compose logs --tail=20 astro-web
 
-    # Prune docker images older than 24hrs
-    # Delete data volumes too
+    # Optional: Prune old images (uncomment if desired)
     # echo -e "${YELLOW}🧹 Cleaning up old Docker images...${NC}"
-    # docker system prune -f --filter "until=24h"
+    # docker image prune -f --filter "until=24h"
     # echo -e "${GREEN}✅ Cleanup complete${NC}"
     
     exit 0
@@ -192,13 +203,15 @@ else
     cd /var/www/sontra
 
     docker compose build astro-web
-    docker compose up -d
+    docker compose stop astro-web
+    docker compose rm -f astro-web
+    docker compose up -d astro-web
     
     # Wait for rollback container to start
     echo -e "${YELLOW}⏳ Waiting for rollback to complete...${NC}"
     sleep 10
     
-    if docker compose ps | grep -q "Up" && curl -f -s -o /dev/null http://localhost:4321; then
+    if docker compose ps | grep -q "sontra-website.*Up" && curl -f -s -o /dev/null http://localhost:4321; then
         echo -e "${GREEN}✅ Successfully rolled back to ${PREVIOUS_COMMIT}${NC}"
     else
         echo -e "${RED}❌ Rollback failed! Manual intervention required.${NC}"
