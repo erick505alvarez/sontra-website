@@ -1,4 +1,11 @@
 {
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./src/*"],
+      "@componentss/*": ["./src/components/*"],
+      "@images/*": ["./src/images/*"]
+    }
+  },
   "extends": "astro/tsconfigs/strict",
   "include": [".astro/types.d.ts", "**/*"],
   "exclude": ["dist"]
