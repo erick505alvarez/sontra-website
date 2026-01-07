@@ -14,7 +14,7 @@ const isDev = process.env.NODE_ENV === "development";
 // https://astro.build/config
 // Export the Astro configuration object
 export default defineConfig({
-  site: isDev ? "localhost:4321" : "https://sontra.dev",
+  site: isDev ? "http://localhost:4321" : "https://sontra.dev",
   // configure schema for env variable
   env: {
     schema: {

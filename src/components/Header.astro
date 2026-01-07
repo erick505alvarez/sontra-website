@@ -1,5 +1,9 @@
 ---
 const { isHomePage } = Astro.props;
+
+const p1 = "562";
+const p2 = "342";
+const p3 = "5281";
 ---
 
 <header
@@ -7,19 +11,21 @@ const { isHomePage } = Astro.props;
   <a href="/">
     <div class="text-2xl font-heading font-bold text-primary">sontra.dev</div>
   </a>
-  {
-    isHomePage ? (
-      <a
-        href="#contact"
-        class="inline-block bg-primary text-white px-4 py-2 rounded-lg text-sm">
-        Book a Demo
-      </a>
-    ) : (
-      <a
-        href="/"
-        class="inline-block bg-primary text-white px-4 py-2 rounded-lg text-sm">
-        Home
-      </a>
-    )
-  }
+  <div>
+    {
+      isHomePage ? (
+        <a
+          href="#contact"
+          class="inline-block bg-primary text-white px-4 py-2 rounded-lg text-sm">
+          Book a Demo
+        </a>
+      ) : (
+        <a
+          href="/"
+          class="inline-block bg-primary text-white px-4 py-2 rounded-lg text-sm">
+          Home
+        </a>
+      )
+    }
+  </div>
 </header>

@@ -1,22 +1,30 @@
 ---
 import Image from "astro/components/Image.astro";
-const { title, subtitle, description, img } = Astro.props;
-const imageHeight = 100;
+const { title, subtitle, description, img, index } = Astro.props;
+const isEven = index % 2 === 0;
 ---
 
-<article class="bg-white rounded-lg card-shadow group/card-hover">
+<article class="bg-white rounded-lg grid grid-cols-1 md:grid-cols-2 gap-8">
   <!-- Card Image -->
-  <div class="relative">
-    <Image src={img} alt={title} class="w-full object-cover rounded-xl" />
-    <div
-      class="OVERLAY group/card-hover absolute z-10 top-0 bottom-0 left-0 right-0 bg-gray-900 opacity-0 group-hover/card-hover:opacity-60 transition-all duration-300 ease-in-out">
-    </div>
-    <p
-      class="absolute top-0 p-6 opacity-0 group-hover/card-hover:opacity-100 text-white z-20 transition-all duration-300 ease-in-out">
+  <Image
+    src={img}
+    alt={title}
+    class:list={[
+      "w-full object-cover rounded-xl",
+      isEven ? "md:order-1" : "md:order-2",
+    ]}
+  />
+
+  <!-- Card Description -->
+  <div
+    class:list={[
+      "flex flex-col justify-center",
+      isEven ? "md:order-2" : "md:order-1",
+    ]}>
+    <h3 class="font-semibold font-heading text-xl">{title}</h3>
+    <p class="text-lg text-gray-600 mt-2 font-body">{subtitle}</p>
+    <p class="mt-4 group-hover/card-hover:opacity-100 text-black">
       {description}
     </p>
   </div>
-  <!-- Card Title -->
-  <h3 class="mt-4 font-semibold font-heading">{title}</h3>
-  <p class="text-sm text-gray-600 mt-2 font-body">{subtitle}</p>
 </article>
