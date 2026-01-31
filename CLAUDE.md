@@ -37,6 +37,7 @@ Defined in tsconfig.json:
 - `src/pages/api/` - API routes (contact.ts handles form submissions)
 - `src/components/` - Astro components
   - `src/components/landing/` - Landing page section components (Hero, VideoSection, SocialProof, ValueProp, CaseStudy, TestForm)
+  - `src/components/landing/IndustryShowcase/` - Interactive tabbed industry showcase with auto-rotation (see `CLAUDE.md` in that directory)
   - `src/components/services/` - Services page components (Hero, ProjectCard, ProjectsGrid, Testimonials)
 - `src/layouts/` - BaseLayout.astro wraps all pages
 - `src/styles/global.css` - Tailwind imports and theme customization

@@ -1,0 +1,80 @@
+---
+import IndustryTab from "./IndustryTab.astro";
+import {
+  House,
+  ShoppingCart,
+  Stethoscope,
+  Car,
+  Scale,
+  Building2,
+  Hotel,
+} from "@lucide/astro";
+
+interface Industry {
+  label: string;
+  id: string;
+}
+
+const industries: Industry[] = [
+  { label: "Home Services", id: "home-services" },
+  { label: "eCommerce", id: "ecommerce" },
+  { label: "Health Practices", id: "health-practices" },
+  { label: "Automotive Dealerships", id: "automotive-dealerships" },
+  { label: "Legal Services", id: "legal-services" },
+  { label: "Real Estate", id: "real-estate" },
+  { label: "Hospitality", id: "hospitality" },
+];
+
+const iconMap: Record<string, typeof House> = {
+  "home-services": House,
+  ecommerce: ShoppingCart,
+  "health-practices": Stethoscope,
+  "automotive-dealerships": Car,
+  "legal-services": Scale,
+  "real-estate": Building2,
+  hospitality: Hotel,
+};
+
+const activeIndustry = Astro.props.activeIndustry || "home-services";
+---
+
+<nav
+  class="sticky bg-white/80 backdrop-blur-sm border-y border-gray-200/60 top-0 z-10"
+  role="tablist"
+  aria-label="Industry navigation">
+  <!-- Auto-rotation progress indicator -->
+  <div class="absolute bottom-0 left-0 right-0 h-0.5 bg-gray-100">
+    <div class="tab-progress" id="rotation-progress"></div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 py-5 overflow-x-auto scrollbar-hide">
+    <div class="flex items-center gap-3 min-w-max justify-center">
+      {
+        industries.map((industry) => {
+          const Icon = iconMap[industry.id];
+          return (
+            <IndustryTab
+              label={industry.label}
+              id={industry.id}
+              active={industry.id === activeIndustry}>
+              <Icon slot="icon" class="w-5 h-5" />
+            </IndustryTab>
+          );
+        })
+      }
+    </div>
+  </div>
+</nav>
+
+<style>
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .scrollbar-hide {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+</style>

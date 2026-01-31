@@ -1,0 +1,323 @@
+---
+import IndustryTabs from "./IndustryTabs.astro";
+import HomeServicesContent from "./HomeServicesContent.astro";
+import EcommerceContent from "./EcommerceContent.astro";
+import HealthPracticesContent from "./HealthPracticesContent.astro";
+import AutomotiveDealershipsContent from "./AutomotiveDealershipsContent.astro";
+import LegalServicesContent from "./LegalServicesContent.astro";
+import RealEstateContent from "./RealEstateContent.astro";
+import HospitalityContent from "./HospitalityContent.astro";
+
+const activeIndustry = Astro.props.activeIndustry || "home-services";
+---
+
+<section
+  class="industry-showcase relative overflow-hidden py-20"
+  data-auto-rotate="true">
+  <!-- Atmospheric background gradient -->
+  <div
+    class="absolute inset-0 bg-linear-to-br from-slate-50 via-white to-primary/5 -z-10">
+  </div>
+
+  <!-- Subtle grid pattern overlay -->
+  <div
+    class="absolute inset-0 opacity-[0.03] -z-10"
+    style="background-image: radial-gradient(circle, #014e5a 1px, transparent 1px); background-size: 24px 24px;">
+  </div>
+
+  <!-- Section header -->
+  <div class="max-w-7xl mx-auto px-4 mb-12 text-center">
+    <span
+      class="inline-block text-primary font-semibold text-sm tracking-widest uppercase mb-4">
+      Industries We Serve
+    </span>
+    <h2
+      class="text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-gray-900 tracking-tight">
+      Built for Your Business
+    </h2>
+  </div>
+
+  <IndustryTabs activeIndustry={activeIndustry} />
+
+  <div class="mt-8 content-panels relative">
+    <div
+      data-panel="home-services"
+      id="panel-home-services"
+      role="tabpanel"
+      aria-labelledby="tab-home-services"
+      class={`panel-content ${activeIndustry !== "home-services" ? "hidden" : ""}`}>
+      <HomeServicesContent />
+    </div>
+    <div
+      data-panel="ecommerce"
+      id="panel-ecommerce"
+      role="tabpanel"
+      aria-labelledby="tab-ecommerce"
+      class={`panel-content ${activeIndustry !== "ecommerce" ? "hidden" : ""}`}>
+      <EcommerceContent />
+    </div>
+    <div
+      data-panel="health-practices"
+      id="panel-health-practices"
+      role="tabpanel"
+      aria-labelledby="tab-health-practices"
+      class={`panel-content ${activeIndustry !== "health-practices" ? "hidden" : ""}`}>
+      <HealthPracticesContent />
+    </div>
+    <div
+      data-panel="automotive-dealerships"
+      id="panel-automotive-dealerships"
+      role="tabpanel"
+      aria-labelledby="tab-automotive-dealerships"
+      class={`panel-content ${activeIndustry !== "automotive-dealerships" ? "hidden" : ""}`}>
+      <AutomotiveDealershipsContent />
+    </div>
+    <div
+      data-panel="legal-services"
+      id="panel-legal-services"
+      role="tabpanel"
+      aria-labelledby="tab-legal-services"
+      class={`panel-content ${activeIndustry !== "legal-services" ? "hidden" : ""}`}>
+      <LegalServicesContent />
+    </div>
+    <div
+      data-panel="real-estate"
+      id="panel-real-estate"
+      role="tabpanel"
+      aria-labelledby="tab-real-estate"
+      class={`panel-content ${activeIndustry !== "real-estate" ? "hidden" : ""}`}>
+      <RealEstateContent />
+    </div>
+    <div
+      data-panel="hospitality"
+      id="panel-hospitality"
+      role="tabpanel"
+      aria-labelledby="tab-hospitality"
+      class={`panel-content ${activeIndustry !== "hospitality" ? "hidden" : ""}`}>
+      <HospitalityContent />
+    </div>
+  </div>
+</section>
+
+<script>
+  class IndustryShowcase {
+    container: HTMLElement;
+    tabs: NodeListOf<HTMLElement>;
+    panels: NodeListOf<HTMLElement>;
+    progressBar: HTMLElement | null;
+    autoRotateInterval: ReturnType<typeof setInterval> | null;
+    rotationDelay: number;
+    isPaused: boolean;
+    industries: string[];
+    currentIndex: number;
+
+    constructor(container: HTMLElement) {
+      this.container = container;
+      this.tabs = container.querySelectorAll("[data-industry-id]");
+      this.panels = container.querySelectorAll("[data-panel]");
+      this.progressBar = container.querySelector("#rotation-progress");
+      this.autoRotateInterval = null;
+      this.rotationDelay = 5000;
+      this.isPaused = false;
+
+      this.industries = [
+        "home-services",
+        "ecommerce",
+        "health-practices",
+        "automotive-dealerships",
+        "legal-services",
+        "real-estate",
+        "hospitality",
+      ];
+
+      // Find initial active index
+      const initialActive = container.querySelector(
+        '[aria-selected="true"]'
+      ) as HTMLElement;
+      this.currentIndex = initialActive
+        ? this.industries.indexOf(initialActive.dataset.industryId || "")
+        : 0;
+
+      this.init();
+    }
+
+    init() {
+      // Add click handlers to tabs
+      this.tabs.forEach((tab, index) => {
+        tab.addEventListener("click", () => {
+          this.switchTo(index);
+          this.resetAutoRotation();
+        });
+      });
+
+      // Pause on hover over the entire showcase section
+      this.container.addEventListener("mouseenter", () => this.pause());
+      this.container.addEventListener("mouseleave", () => this.resume());
+
+      // Pause when focused (keyboard navigation)
+      this.container.addEventListener("focusin", () => this.pause());
+      this.container.addEventListener("focusout", (e: FocusEvent) => {
+        if (!this.container.contains(e.relatedTarget as Node)) {
+          this.resume();
+        }
+      });
+
+      // Keyboard navigation
+      this.container.addEventListener("keydown", (e) => this.handleKeyboard(e));
+
+      // Start auto-rotation if enabled
+      if (this.container.dataset.autoRotate === "true") {
+        this.startAutoRotation();
+      }
+
+      // Intersection observer - only rotate when visible
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              this.resume();
+            } else {
+              this.pause();
+            }
+          });
+        },
+        { threshold: 0.3 }
+      );
+
+      observer.observe(this.container);
+    }
+
+    switchTo(index: number) {
+      this.currentIndex = index;
+      const targetId = this.industries[index];
+
+      // Update tabs
+      this.tabs.forEach((tab, i) => {
+        const isActive = i === index;
+        tab.setAttribute("aria-selected", String(isActive));
+
+        // Toggle classes for active/inactive states
+        if (isActive) {
+          tab.classList.remove(
+            "bg-white",
+            "text-gray-700",
+            "border",
+            "border-gray-200",
+            "hover:border-primary/40",
+            "hover:bg-primary/5",
+            "hover:-translate-y-0.5",
+            "hover:shadow-md"
+          );
+          tab.classList.add(
+            "bg-primary",
+            "text-white",
+            "shadow-lg",
+            "shadow-primary/25",
+            "scale-[1.02]"
+          );
+        } else {
+          tab.classList.remove(
+            "bg-primary",
+            "text-white",
+            "shadow-lg",
+            "shadow-primary/25",
+            "scale-[1.02]"
+          );
+          tab.classList.add(
+            "bg-white",
+            "text-gray-700",
+            "border",
+            "border-gray-200",
+            "hover:border-primary/40",
+            "hover:bg-primary/5",
+            "hover:-translate-y-0.5",
+            "hover:shadow-md"
+          );
+        }
+      });
+
+      // Update panels with fade transition
+      this.panels.forEach((panel) => {
+        const isTarget = panel.dataset.panel === targetId;
+        if (isTarget) {
+          panel.classList.remove("hidden");
+          panel.classList.add("animate-fadeIn");
+        } else {
+          panel.classList.add("hidden");
+          panel.classList.remove("animate-fadeIn");
+        }
+      });
+
+      // Reset progress bar animation
+      this.resetProgressBar();
+    }
+
+    resetProgressBar() {
+      if (this.progressBar) {
+        this.progressBar.style.animation = "none";
+        // Trigger reflow
+        void this.progressBar.offsetHeight;
+        this.progressBar.style.animation = "progressBar 5s linear";
+      }
+    }
+
+    next() {
+      const nextIndex = (this.currentIndex + 1) % this.industries.length;
+      this.switchTo(nextIndex);
+    }
+
+    startAutoRotation() {
+      this.resetProgressBar();
+      this.autoRotateInterval = setInterval(() => {
+        if (!this.isPaused) {
+          this.next();
+        }
+      }, this.rotationDelay);
+    }
+
+    resetAutoRotation() {
+      if (this.autoRotateInterval) {
+        clearInterval(this.autoRotateInterval);
+        this.startAutoRotation();
+      }
+    }
+
+    pause() {
+      this.isPaused = true;
+      if (this.progressBar) {
+        this.progressBar.style.animationPlayState = "paused";
+      }
+    }
+
+    resume() {
+      this.isPaused = false;
+      if (this.progressBar) {
+        this.progressBar.style.animationPlayState = "running";
+      }
+    }
+
+    handleKeyboard(e: KeyboardEvent) {
+      if (e.key === "ArrowRight") {
+        e.preventDefault();
+        this.switchTo((this.currentIndex + 1) % this.industries.length);
+        this.resetAutoRotation();
+        (this.tabs[this.currentIndex] as HTMLElement).focus();
+      } else if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        this.switchTo(
+          (this.currentIndex - 1 + this.industries.length) %
+            this.industries.length
+        );
+        this.resetAutoRotation();
+        (this.tabs[this.currentIndex] as HTMLElement).focus();
+      }
+    }
+  }
+
+  // Initialize all IndustryShowcase components on the page
+  document
+    .querySelectorAll<HTMLElement>(".industry-showcase")
+    .forEach((showcase) => {
+      new IndustryShowcase(showcase);
+    });
+</script>

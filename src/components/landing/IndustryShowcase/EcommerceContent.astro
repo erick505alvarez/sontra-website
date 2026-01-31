@@ -1,0 +1,84 @@
+---
+import { CheckCircle2 } from "@lucide/astro";
+
+const benefits = [
+  "Transform abandoned carts into completed sales with intelligent follow-up conversations.",
+  "Provide instant product recommendations based on customer preferences and browsing history.",
+  "Handle returns, exchanges, and order inquiries automatically, freeing up your support team.",
+];
+
+const chatMessages = [
+  { type: "customer", text: "I really like the chair that you recommended" },
+  { type: "customer", text: "What's your return policy?" },
+  { type: "customer", text: "Do you have this in navy blue?" },
+  { type: "customer", text: "When will this be back in stock?" },
+  { type: "customer", text: "Can I get expedited shipping?" },
+  { type: "customer", text: "I need help finding the right size" },
+];
+---
+
+<section class="max-w-7xl mx-auto px-4 py-12">
+  <div class="grid lg:grid-cols-2 gap-12 items-start">
+    <!-- Left Column - Benefits -->
+    <div>
+      <h2
+        class="text-4xl md:text-5xl font-heading font-bold text-gray-900 mb-8">
+        eCommerce
+      </h2>
+
+      <div class="space-y-4 mb-8">
+        {
+          benefits.map((benefit) => (
+            <div class="flex gap-3 items-start">
+              <CheckCircle2 class="w-6 h-6 text-primary flex-shrink-0 mt-0.5" />
+              <p class="text-lg text-gray-700 leading-relaxed">{benefit}</p>
+            </div>
+          ))
+        }
+      </div>
+
+      <a
+        href="/booking"
+        class="inline-flex items-center gap-2 bg-white text-gray-900 px-6 py-3 rounded-lg font-semibold border-2 border-gray-900 hover:bg-gray-50 transition-colors">
+        Get started today →
+      </a>
+    </div>
+
+    <!-- Right Column - Chat Interface -->
+    <div
+      class="bg-gradient-to-br from-gray-50 to-white rounded-2xl border border-gray-200 p-8 shadow-sm">
+      <div class="relative">
+        <!-- Avatar Icons -->
+        <div class="flex justify-center items-center gap-4 mb-8">
+          <div
+            class="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center text-white font-bold text-xl border-2 border-white shadow-md">
+            YL
+          </div>
+          <div
+            class="w-16 h-16 rounded-full bg-primary flex items-center justify-center text-white font-bold text-xl border-2 border-white shadow-md z-10">
+            S
+          </div>
+        </div>
+
+        <!-- Chat Messages -->
+        <div class="space-y-4">
+          {
+            chatMessages.map((message, index) => (
+              <div
+                class={`flex ${index % 2 === 0 ? "justify-start" : "justify-end"}`}>
+                <div
+                  class={`
+                  flex items-center gap-2 px-4 py-2.5 rounded-2xl max-w-[85%]
+                  ${index % 2 === 0 ? "bg-gray-100 text-gray-800" : "bg-blue-50 text-gray-800"}
+                `}>
+                  <span class="text-sm">👤</span>
+                  <span class="text-sm leading-relaxed">{message.text}</span>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

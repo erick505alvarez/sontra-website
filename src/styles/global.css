@@ -37,4 +37,35 @@
     border-color: var(--color-primary);
     box-shadow: 0 0 0 3px rgba(1, 78, 90, 0.1);
   }
+
+  /* Industry Showcase animations */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes progressBar {
+    from {
+      width: 0%;
+    }
+    to {
+      width: 100%;
+    }
+  }
+
+  .animate-fadeIn {
+    animation: fadeIn 0.4s ease-out forwards;
+  }
+
+  .tab-progress {
+    height: 3px;
+    background: var(--color-primary);
+    animation: progressBar 5s linear;
+  }
 }

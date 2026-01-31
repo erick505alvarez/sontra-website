@@ -1,0 +1,109 @@
+---
+import { CheckCircle2 } from "@lucide/astro";
+
+const benefits = [
+  "Never miss a service call, even during peak hours or emergencies.",
+  "Reduce customer wait times by instantly scheduling appointments based on urgency and technician availability.",
+  "Increase job bookings by providing immediate service quotes and information.",
+];
+
+const sampleLeads = [
+  {
+    initials: "LC",
+    name: "Lauren Chaney",
+    time: "2:31",
+    reason: "Kitchen renovation plans",
+    budget: "$10,000",
+    address: "8521 S Green Bay Ave, Chicago, IL 60617",
+    comment: "Waiting for connection within 2 days",
+  },
+  {
+    initials: "CH",
+    name: "Courtney Henry",
+    time: "5:44",
+    reason: "Full home automation system",
+    budget: "$45,000",
+    address: "1247 Maple Ridge Dr, Austin, TX 78759",
+    comment: "Premium smart home integration needed",
+  },
+  {
+    initials: "DL",
+    name: "Devon Lane",
+    time: "3:12",
+    reason: "Complete office renovation",
+    budget: "$52,000",
+    address: "890 Corporate Blvd, Denver, CO 80202",
+    comment: "Multi-floor commercial buildout required",
+  },
+];
+---
+
+<section class="max-w-7xl mx-auto px-4 py-12">
+  <div class="grid lg:grid-cols-2 gap-12 items-start">
+    <!-- Left Column - Benefits -->
+    <div>
+      <h2
+        class="text-4xl md:text-5xl font-heading font-bold text-gray-900 mb-8">
+        Home Services
+      </h2>
+
+      <div class="space-y-4 mb-8">
+        {
+          benefits.map((benefit) => (
+            <div class="flex gap-3 items-start">
+              <CheckCircle2 class="w-6 h-6 text-primary shrink-0 mt-0.5" />
+              <p class="text-lg text-gray-700 leading-relaxed">{benefit}</p>
+            </div>
+          ))
+        }
+      </div>
+
+      <a
+        href="/booking"
+        class="inline-flex items-center gap-2 bg-white text-gray-900 px-6 py-3 rounded-lg font-semibold border-2 border-gray-900 hover:bg-gray-50 transition-colors">
+        Get started today →
+      </a>
+    </div>
+
+    <!-- Right Column - Lead Cards -->
+    <div class="space-y-4">
+      {
+        sampleLeads.map((lead) => (
+          <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+            <div class="flex items-start justify-between mb-4">
+              <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center font-semibold text-gray-700">
+                  {lead.initials}
+                </div>
+                <div>
+                  <div class="font-semibold text-gray-900">{lead.name}</div>
+                  <div class="text-sm text-gray-500 flex items-center gap-1">
+                    <span>📞</span>
+                    Picked-up by Elons of A.I.
+                  </div>
+                </div>
+              </div>
+              <button class="text-sm text-primary hover:underline">
+                Collapse details
+              </button>
+            </div>
+
+            <div class="grid grid-cols-[120px_1fr] gap-x-4 gap-y-2 text-sm">
+              <div class="text-gray-500">Reason for calling:</div>
+              <div class="font-semibold text-gray-900">{lead.reason}</div>
+
+              <div class="text-gray-500">Budget:</div>
+              <div class="font-semibold text-gray-900">{lead.budget}</div>
+
+              <div class="text-gray-500">Domicile:</div>
+              <div class="text-gray-700">{lead.address}</div>
+
+              <div class="text-gray-500">Comments:</div>
+              <div class="text-gray-700">{lead.comment}</div>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
