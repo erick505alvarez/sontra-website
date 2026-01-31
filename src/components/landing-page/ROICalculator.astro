@@ -2,12 +2,12 @@
 /* ROI Calculator - Industrial Utility Design */
 ---
 
-<section class="relative py-24 bg-canvas overflow-hidden">
+<section class="relative py-0 bg-canvas overflow-hidden">
   <div class="container mx-auto px-6 relative z-10">
     <div class="max-w-4xl mx-auto">
       <header class="mb-12 border-l-4 border-accent pl-6">
         <h2
-          class="text-5xl md:text-7xl font-display font-black uppercase tracking-tighter leading-none">
+          class="text-5xl md:text-7xl font-heading font-black uppercase tracking-tighter leading-none">
           Potential <span class="text-accent">Missed</span> ROI
         </h2>
         <p
@@ -86,8 +86,10 @@
 
           <div class="mt-12">
             <button
-              class="group relative w-full bg-accent font-display font-bold uppercase py-5 px-8 transition-all duration-300 flex items-center justify-center gap-3 overflow-hidden">
-              <span class="relative z-10">Stop the Bleeding — Book Call</span>
+              class="group relative rounded-md w-full bg-primary text-white font-body font-bold uppercase py-5 px-8 transition-all duration-300 flex items-center justify-center gap-3 overflow-hidden cursor-pointer">
+              <span class="relative z-10">
+                Stop the Bleeding<br />Book Now
+              </span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 class="h-5 w-5 relative z-10 group-hover:translate-x-1 transition-transform"
@@ -118,21 +120,29 @@
   const resultDisplay = document.getElementById("roi-result");
 
   function calculate() {
-    const missed =
-      parseFloat(document.getElementById("missed-calls").value) || 0;
-    const value = parseFloat(document.getElementById("lead-value").value) || 0;
-    const days = parseFloat(document.getElementById("days-open").value) || 0;
+    // 1. We cast the elements to HTMLInputElements so TS knows they have a '.value'
+    // 2. Use optional chaining (?.) and default to "0" to handle potential nulls safely
+    const getValue = (id: string) => {
+      const el = document.getElementById(id) as HTMLInputElement | null;
+      return parseFloat(el?.value || "0") || 0;
+    };
+
+    const missed = getValue("missed-calls");
+    const value = getValue("lead-value");
+    const days = getValue("days-open");
 
     const total = missed * value * days;
 
-    // Animate the number change
     if (resultDisplay) {
       resultDisplay.textContent = total.toLocaleString("en-US");
     }
   }
 
   inputs.forEach((id) => {
-    document.getElementById(id)?.addEventListener("input", calculate);
+    const el = document.getElementById(id);
+    if (el) {
+      el.addEventListener("input", calculate);
+    }
   });
 </script>
 
