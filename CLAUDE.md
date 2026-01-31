@@ -33,9 +33,11 @@ Defined in tsconfig.json:
 
 ### Project Structure
 
-- `src/pages/` - File-based routing (index.astro, booking.astro, 404.astro)
+- `src/pages/` - File-based routing (index.astro, services.astro, booking.astro, 404.astro)
 - `src/pages/api/` - API routes (contact.ts handles form submissions)
 - `src/components/` - Astro components
+  - `src/components/landing/` - Landing page section components (Hero, VideoSection, SocialProof, ValueProp, CaseStudy, TestForm)
+  - `src/components/services/` - Services page components (Hero, ProjectCard, ProjectsGrid, Testimonials)
 - `src/layouts/` - BaseLayout.astro wraps all pages
 - `src/styles/global.css` - Tailwind imports and theme customization
 - `src/middleware.ts` - Rate limiting middleware (100 req/min per IP)

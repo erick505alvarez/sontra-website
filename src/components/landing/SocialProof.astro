@@ -1,0 +1,29 @@
+---
+const avatars = [
+  "https://i.pravatar.cc/80?img=1",
+  "https://i.pravatar.cc/80?img=2",
+  "https://i.pravatar.cc/80?img=3",
+  "https://i.pravatar.cc/80?img=4",
+  "https://i.pravatar.cc/80?img=5",
+];
+---
+
+<section class="flex flex-col items-center justify-center gap-4">
+  <div class="flex items-center gap-4">
+    <div class="flex -space-x-3">
+      {
+        avatars.map((src, i) => (
+          <img
+            src={src}
+            alt="Customer avatar"
+            width="40"
+            height="40"
+            class="w-10 h-10 rounded-full border-2 border-white shadow-sm object-cover"
+            style={`z-index: ${avatars.length - i}`}
+          />
+        ))
+      }
+    </div>
+    <span class="text-gray-700 font-medium">Trusted by 57+ businesses</span>
+  </div>
+</section>

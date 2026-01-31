@@ -30,4 +30,11 @@
   .stack-card:nth-child(3) {
     transform: rotate(-2deg);
   }
+
+  /* Focus states for test form inputs */
+  .test-form-input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(1, 78, 90, 0.1);
+  }
 }
