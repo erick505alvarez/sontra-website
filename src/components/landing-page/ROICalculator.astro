@@ -1,5 +1,6 @@
 ---
 /* ROI Calculator */
+import { Phone } from "@lucide/astro";
 ---
 
 <section class="relative py-0 bg-white overflow-hidden">
@@ -7,7 +8,7 @@
     <header class="mb-12 flex flex-col items-center text-center">
       <h2
         class="text-4xl md:text-5xl font-heading font-bold tracking-tight leading-tight text-gray-900">
-        Potential <span class="text-priamry">Missed</span> ROI
+        Potential Missed ROI
       </h2>
       <p class="mt-4 text-gray-600 max-w-xl text-lg leading-relaxed">
         Small numbers hide massive leaks. Even 3 missed calls daily could bleed
@@ -29,25 +30,25 @@
               type="number"
               id="missed-calls"
               value="3"
-              class="w-full bg-transparent border-b-2 border-gray-200 py-4 text-3xl font-heading font-bold focus:outline-none focus:border-accent transition-colors text-gray-900"
+              class="w-full bg-transparent border-b-2 border-gray-200 py-4 text-3xl font-heading font-bold focus:outline-none focus:border-primary transition-colors text-gray-900"
             />
           </div>
 
           <div class="group">
             <label
               class="block text-sm font-semibold text-primary uppercase mb-2 tracking-wide">
-              Average Value Per Lead ($)
+              Average Value Per Lead
             </label>
             <div class="relative">
               <span
-                class="absolute top-1/2 -translate-y-1/2 text-3xl text-gray-400">
+                class="absolute top-1/2 -translate-y-[55%] text-3xl text-primary/60">
                 $
               </span>
               <input
                 type="number"
                 id="lead-value"
                 value="250"
-                class="pl-8 w-full bg-transparent border-b-2 border-gray-200 py-4 text-3xl font-heading font-bold focus:outline-none focus:border-accent transition-colors text-gray-900"
+                class="pl-8 w-full bg-transparent border-b-2 border-gray-200 py-4 text-3xl font-heading font-bold focus:outline-none focus:border-primary transition-colors text-gray-900"
               />
             </div>
           </div>
@@ -61,7 +62,7 @@
               type="number"
               id="days-open"
               value="26"
-              class="w-full bg-transparent border-b-2 border-gray-200 py-4 text-3xl font-heading font-bold focus:outline-none focus:border-accent transition-colors text-gray-900"
+              class="w-full bg-transparent border-b-2 border-gray-200 py-4 text-3xl font-heading font-bold focus:outline-none focus:border-primary transition-colors text-gray-900"
             />
           </div>
         </div>

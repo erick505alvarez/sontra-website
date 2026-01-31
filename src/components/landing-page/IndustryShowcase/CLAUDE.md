@@ -37,7 +37,7 @@ The IndustryShowcase uses client-side JavaScript (`<script>` block) for:
 
 ```astro
 ---
-import IndustryShowcase from "@components/landing/IndustryShowcase/IndustryShowcase.astro";
+import IndustryShowcase from "@/components/landing-page/IndustryShowcase/IndustryShowcase.astro";
 ---
 
 <IndustryShowcase activeIndustry="home-services" />
@@ -66,7 +66,8 @@ Full ARIA support:
 
 Uses Tailwind CSS with project theme:
 
-- `text-primary` - Brand color (#014e5a)
+- `text-primary` - Brand color (#014e5a) for main elements
+- `text-accent` - Secondary color (#ea580c) for highlights and hover states, use sparingly
 - `font-heading` - Sora font
 - Animations defined in `global.css` (`fadeIn`, `progressBar`)
 

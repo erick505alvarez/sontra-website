@@ -21,7 +21,17 @@ This is an Astro website for sontra.dev with server-side rendering (SSR) deploye
 - **Output mode**: Server-side rendered (`output: "server"` in astro.config.mjs)
 - **Adapter**: `@astrojs/node` in standalone mode for self-hosting
 - **Styling**: Tailwind CSS v4 via Vite plugin (not the Astro integration)
+- **Icons**: Lucide Astro (`@lucide/astro`) for UI icons
 - **Email**: Resend API for contact form submissions
+
+### Theme Colors
+
+Defined in `src/styles/global.css` under `@theme`:
+
+- `--color-primary: #014e5a` (teal) - Primary brand color, main CTAs, headers
+- `--color-accent: #ea580c` (orange) - Secondary highlights, hover states, urgency indicators
+- `--font-heading: "Sora"` - Headings
+- `--font-body: "Inter"` - Body text
 
 ### Path Aliases
 
@@ -36,13 +46,16 @@ Defined in tsconfig.json:
 - `src/pages/` - File-based routing (index.astro, services.astro, booking.astro, 404.astro)
 - `src/pages/api/` - API routes (contact.ts handles form submissions)
 - `src/components/` - Astro components
-  - `src/components/landing/` - Landing page section components (Hero, VideoSection, SocialProof, ValueProp, CaseStudy, TestForm)
-  - `src/components/landing/IndustryShowcase/` - Interactive tabbed industry showcase with auto-rotation (see `CLAUDE.md` in that directory)
+  - `src/components/landing-page/` - Landing page section components
+    - `index.astro` - Barrel file composing all landing sections
+    - `Hero.astro`, `TestForm.astro`, `ROICalculator.astro`, `ValueProp.astro`, `CaseStudy.astro`, `Calendar.astro`, `FAQs.astro`, `Integrations.astro`, `CallToAction.astro`
+    - `IndustryShowcase/` - Interactive tabbed industry showcase with auto-rotation (see `CLAUDE.md` in that directory)
   - `src/components/services/` - Services page components (Hero, ProjectCard, ProjectsGrid, Testimonials)
 - `src/layouts/` - BaseLayout.astro wraps all pages
 - `src/styles/global.css` - Tailwind imports and theme customization
 - `src/middleware.ts` - Rate limiting middleware (100 req/min per IP)
 - `src/types/` - TypeScript interfaces
+- `src/lib/utils.ts` - Utility functions (e.g., `cn()` for classname merging)
 
 ### Environment Variables
 
