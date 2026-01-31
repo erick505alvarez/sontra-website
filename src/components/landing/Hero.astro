@@ -1,30 +1,38 @@
 ---
 import { Phone } from "@lucide/astro";
+
+const paragraphClass =
+  "text-lg md:text-xl mt-8 max-w-3xl mx-auto text-gray-700 leading-relaxed";
 ---
 
 <section class="text-center">
+  <!-- Heading -->
   <h1
     class="text-4xl md:text-5xl lg:text-6xl font-heading font-bold tracking-tight leading-tight">
-    How many jobs are you losing just because no one called fast enough?
+    You're losing jobs because<br />you're not calling fast enough
   </h1>
-  <p
-    class="text-lg md:text-xl mt-8 max-w-3xl mx-auto text-gray-700 leading-relaxed">
+
+  <!-- Body Text -->
+  <p class={paragraphClass}>
     <span class="font-bold text-black">
-      I've tested over 1,500+ Google Local Services Ads by submitting real
-      inquiries.
+      We've tested Google Local Services Ads by submitting real customer
+      inquiries. In most cases, we never got a call back.
     </span>{" "}
-    In nearly every case, <span class="font-bold text-black">
-      no one called me back
-    </span>. Google's automated SMS was immediate, but the human follow-up
-    call—if it came at all, was hours or days later. Our A.I voice agent will
-    answer your phone or call your leads in under 6 seconds, qualify, and
-    schedule an estimate before your competitor see's the notification.
+    Automated texts showed up right away, but an actual phone call rarely did. If
+    it did, it was the next day. Sometimes 3 days later.
   </p>
+  <p class={paragraphClass}>
+    Our AI voice agent doesn’t wait. It picks up inbound calls or reaches out to
+    new leads within 6 seconds, asks the right questions, and books an estimate
+    immediately, while other businesses are still catching up.
+  </p>
+
+  <!-- Button -->
   <div class="mt-10 flex justify-center">
     <a
       href="/booking"
       class="inline-flex items-center gap-2 bg-primary text-white px-8 py-4 rounded-md font-semibold text-lg hover:bg-primary/90 transition-colors">
-      Book a 15-min blueprint call
+      Book a 15-min free consultation
       <Phone class="w-5 h-5" />
     </a>
   </div>
