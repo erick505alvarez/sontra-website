@@ -1,0 +1,78 @@
+---
+// Import the integrations data
+// You can either import from a JSON file or define inline
+const integrationsData = {
+  title: "Integrations",
+  subtitle:
+    "We believe AI Agents should adapt to your business and work WITH your team — not the other way around. That's why our A.I. agents work seamlessly with your current CRM, phone system, calendar, or intake forms. No disruptions. Just instant upgrades to the way you already operate.",
+  description:
+    "We empower your AI Agents to seamlessly integrate with your team and the tools you use daily.",
+  integrations: [
+    { name: "Discord", icon: "discord", color: "5865F2" },
+    { name: "Google Sheets", icon: "googlesheets", color: "34A853" },
+    { name: "Slack", icon: "slack", color: "4A154B" },
+    { name: "Google Drive", icon: "googledrive", color: "4285F4" },
+    { name: "Notion", icon: "notion", color: "000000" },
+    { name: "Zoom", icon: "zoom", color: "0B5CFF" },
+    { name: "WhatsApp", icon: "whatsapp", color: "25D366" },
+    { name: "Meta", icon: "meta", color: "0081FB" },
+    { name: "Proton Mail", icon: "protonmail", color: "6D4AFF" },
+    { name: "Figma", icon: "figma", color: "F24E1E" },
+    { name: "Python", icon: "python", color: "3776AB" },
+    { name: "HubSpot", icon: "hubspot", color: "FF7A59" },
+    { name: "Zapier", icon: "zapier", color: "FF4A00" },
+    { name: "Linear", icon: "linear", color: "5E6AD2" },
+    { name: "Salesforce", icon: "salesforce", color: "00A1E0" },
+    { name: "OpenAI", icon: "openai", color: "412991" },
+    { name: "Zendesk", icon: "zendesk", color: "03363D" },
+    { name: "Clockify", icon: "clockify", color: "03A9F4" },
+    { name: "Jira", icon: "jira", color: "0052CC" },
+    { name: "Google", icon: "google", color: "4285F4" },
+  ],
+};
+---
+
+<section class="py-20 px-4 bg-gray-50">
+  <div class="max-w-6xl mx-auto">
+    <!-- Header -->
+    <div class="text-center mb-16">
+      <h2 class="text-5xl md:text-6xl font-heading font-bold text-primary mb-8">
+        {integrationsData.title}
+      </h2>
+
+      <p class="text-lg md:text-xl text-gray-900 max-w-4xl mx-auto mb-6">
+        <span class="font-semibold">
+          We're strong believers that AI Agents should adapt to your business
+          and work WITH your team
+        </span>
+        {" "}— not the other way around. That's why our A.I. agents work
+        seamlessly with your existing CRM, phone system, calendar, or intake
+        forms. No disruptions. Just instant upgrades to the way you already
+        operate.
+      </p>
+
+      <p class="text-lg text-gray-700 max-w-3xl mx-auto">
+        {integrationsData.description}
+      </p>
+    </div>
+
+    <!-- Integration Icons Grid -->
+    <div
+      class="grid grid-cols-5 md:grid-cols-10 gap-4 md:gap-6 max-w-5xl mx-auto">
+      {
+        integrationsData.integrations.map((integration) => (
+          <div
+            class="bg-white rounded-2xl p-4 md:p-5 shadow-sm hover:shadow-md transition-all duration-200 hover:-translate-y-1 flex items-center justify-center aspect-square"
+            title={integration.name}>
+            <img
+              src={`https://cdn.simpleicons.org/${integration.icon}/${integration.color}`}
+              alt={`${integration.name} logo`}
+              class="w-full h-full object-contain"
+              loading="lazy"
+            />
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
