@@ -10,6 +10,7 @@
   --font-body: "Inter", "sans-serif";
 
   --color-primary: #014e5a;
+  --color-accent: #ea580c;
 }
 
 @layer base {

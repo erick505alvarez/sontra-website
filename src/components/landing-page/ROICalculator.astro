@@ -1,114 +1,112 @@
 ---
-/* ROI Calculator - Industrial Utility Design */
+/* ROI Calculator */
 ---
 
-<section class="relative py-0 bg-canvas overflow-hidden">
-  <div class="container mx-auto px-6 relative z-10">
-    <div class="max-w-4xl mx-auto">
-      <header class="mb-12 border-l-4 border-accent pl-6">
-        <h2
-          class="text-5xl md:text-7xl font-heading font-black uppercase tracking-tighter leading-none">
-          Potential <span class="text-accent">Missed</span> ROI
-        </h2>
-        <p
-          class="mt-4 text-gray-400 font-body max-w-xl text-lg uppercase tracking-widest leading-tight">
-          Small numbers hide massive leaks. Even 3 missed calls daily could
-          bleed 6-7 figures annually.
-        </p>
-      </header>
+<section class="relative py-0 bg-white overflow-hidden">
+  <div class="mx-auto px-6 relative z-10">
+    <header class="mb-12 flex flex-col items-center text-center">
+      <h2
+        class="text-4xl md:text-5xl font-heading font-bold tracking-tight leading-tight text-gray-900">
+        Potential <span class="text-priamry">Missed</span> ROI
+      </h2>
+      <p class="mt-4 text-gray-600 max-w-xl text-lg leading-relaxed">
+        Small numbers hide massive leaks. Even 3 missed calls daily could bleed
+        6-7 figures annually.
+      </p>
+    </header>
 
-      <div class="grid lg:grid-cols-5 gap-0">
-        <div
-          class="lg:col-span-3 p-8 md:p-12 border-b lg:border-b-0 lg:border-r border-border-heavy">
-          <div class="space-y-8" id="roi-form">
-            <div class="group">
-              <label
-                class="block text-xs font-body uppercase text-accent mb-2 tracking-widest">
-                Average Missed Calls / Day
-              </label>
+    <div
+      class="grid lg:grid-cols-5 gap-0 border border-gray-200 rounded-2xl overflow-hidden">
+      <div
+        class="lg:col-span-3 p-8 md:p-12 border-b lg:border-b-0 lg:border-r border-gray-200 bg-white">
+        <div class="space-y-8" id="roi-form">
+          <div class="group">
+            <label
+              class="block text-sm font-semibold text-primary uppercase mb-2 tracking-wide">
+              Average Missed Calls / Day
+            </label>
+            <input
+              type="number"
+              id="missed-calls"
+              value="3"
+              class="w-full bg-transparent border-b-2 border-gray-200 py-4 text-3xl font-heading font-bold focus:outline-none focus:border-accent transition-colors text-gray-900"
+            />
+          </div>
+
+          <div class="group">
+            <label
+              class="block text-sm font-semibold text-primary uppercase mb-2 tracking-wide">
+              Average Value Per Lead ($)
+            </label>
+            <div class="relative">
+              <span
+                class="absolute top-1/2 -translate-y-1/2 text-3xl text-gray-400">
+                $
+              </span>
               <input
                 type="number"
-                id="missed-calls"
-                value="3"
-                class="w-full bg-transparent border-b-2 border-border-heavy py-4 text-3xl font-mono focus:outline-none focus:border-accent transition-colors"
+                id="lead-value"
+                value="250"
+                class="pl-8 w-full bg-transparent border-b-2 border-gray-200 py-4 text-3xl font-heading font-bold focus:outline-none focus:border-accent transition-colors text-gray-900"
               />
             </div>
+          </div>
 
-            <div class="group">
-              <label
-                class="block text-xs font-body uppercase text-accent mb-2 tracking-widest">
-                Average Value Per Lead ($)
-              </label>
-              <div class="relative">
-                <span class="absolute top-1/2 -translate-y-[52%] text-3xl">
-                  $
-                </span>
-                <input
-                  type="number"
-                  id="lead-value"
-                  value="250"
-                  class="pl-8 w-full bg-transparent border-b-2 border-border-heavy py-4 text-3xl font-mono focus:outline-none focus:border-accent transition-colors"
-                />
-              </div>
-            </div>
+          <div class="group">
+            <label
+              class="block text-sm font-semibold text-primary uppercase mb-2 tracking-wide">
+              Days Open / Month
+            </label>
+            <input
+              type="number"
+              id="days-open"
+              value="26"
+              class="w-full bg-transparent border-b-2 border-gray-200 py-4 text-3xl font-heading font-bold focus:outline-none focus:border-accent transition-colors text-gray-900"
+            />
+          </div>
+        </div>
+      </div>
 
-            <div class="group">
-              <label
-                class="block text-xs font-mono uppercase text-accent mb-2 tracking-widest">
-                03. Days Open / Month
-              </label>
-              <input
-                type="number"
-                id="days-open"
-                value="26"
-                class="w-full bg-transparent border-b-2 border-border-heavy py-4 text-3xl font-mono focus:outline-none focus:border-accent transition-colors"
-              />
-            </div>
+      <div
+        class="lg:col-span-2 p-8 md:p-12 flex flex-col justify-between bg-primary/5">
+        <div class="flex flex-col items-center">
+          <span
+            class="inline-block px-3 py-1.5 bg-primary text-white text-xs font-bold uppercase rounded-md mb-4 tracking-wide">
+            Estimated Monthly Leakage
+          </span>
+          <div class="flex items-baseline gap-2">
+            <span class="text-4xl font-heading font-bold text-primary">$</span>
+            <h3
+              id="roi-result"
+              class="text-5xl md:text-6xl font-heading font-bold tabular-nums tracking-tight text-gray-900">
+              19,500
+            </h3>
           </div>
         </div>
 
-        <div
-          class="lg:col-span-2 p-8 md:p-12 flex flex-col justify-between bg-accent/5">
-          <div>
-            <span
-              class="inline-block px-2 py-1 bg-accent text-[10px] font-bold uppercase mb-4">
-              Estimated Monthly Leakage
-            </span>
-            <div class="flex items-baseline gap-2">
-              <span class="text-4xl font-mono text-accent">$</span>
-              <h3
-                id="roi-result"
-                class="text-6xl md:text-7xl font-mono font-bold tabular-nums tracking-tighter">
-                19,500
-              </h3>
-            </div>
-          </div>
-
-          <div class="mt-12">
-            <button
-              class="group relative rounded-md w-full bg-primary text-white font-body font-bold uppercase py-5 px-8 transition-all duration-300 flex items-center justify-center gap-3 overflow-hidden cursor-pointer">
-              <span class="relative z-10">
-                Stop the Bleeding<br />Book Now
-              </span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 relative z-10 group-hover:translate-x-1 transition-transform"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="3"
-                  d="M17 8l4 4m0 0l-4 4m4-4H3">
-                </path>
-              </svg>
-            </button>
-            <p
-              class="text-[10px] font-mono text-gray-500 mt-4 text-center uppercase tracking-widest opacity-50">
-              Generated by SONTRA.DEV ROI Engine v1.0
-            </p>
-          </div>
+        <div class="mt-12">
+          <a
+            href="/booking"
+            class="group relative rounded-lg w-full bg-primary text-white font-semibold py-2 px-4 transition-all duration-300 flex items-center justify-center gap-3 overflow-hidden cursor-pointer hover:bg-primary/90">
+            <span class="relative z-10 text-center">Stop the Bleeding Now</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 relative z-10 group-hover:translate-x-1 transition-transform"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M17 8l4 4m0 0l-4 4m4-4H3">
+              </path>
+            </svg>
+          </a>
+          <p
+            class="text-xs text-gray-400 mt-4 text-center uppercase tracking-wide">
+            Powered by sontra.dev
+          </p>
         </div>
       </div>
     </div>
@@ -120,8 +118,6 @@
   const resultDisplay = document.getElementById("roi-result");
 
   function calculate() {
-    // 1. We cast the elements to HTMLInputElements so TS knows they have a '.value'
-    // 2. Use optional chaining (?.) and default to "0" to handle potential nulls safely
     const getValue = (id: string) => {
       const el = document.getElementById(id) as HTMLInputElement | null;
       return parseFloat(el?.value || "0") || 0;
