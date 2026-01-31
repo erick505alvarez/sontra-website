@@ -1,0 +1,197 @@
+---
+import { Plus } from "@lucide/astro";
+
+const faqData = {
+  title: "Frequently Asked Questions",
+  description:
+    "We create and deploy smart AI agents that manage your messages and calls around the clock. Our agents are built to think, act, and improve just like real experts—helping your business run smoother and grow faster.",
+  faqs: [
+    {
+      question: "What exactly is an AI agent?",
+      answer:
+        "An AI agent is a software program designed to handle tasks, make decisions, and communicate with people in smart, automated ways. Using advanced technology and machine learning, AI agents can streamline workflows, provide helpful insights, and make everyday operations more efficient.",
+    },
+    {
+      question: "How can AI agents help my business?",
+      answer:
+        "AI agents save time and money by taking care of repetitive tasks, improving decision-making with real data, and creating better customer experiences. They help businesses work faster, scale more easily, and reduce operational headaches.",
+    },
+    {
+      question: "Can your AI agents be tailored to my industry?",
+      answer:
+        "Absolutely. Our AI agents can be customized to fit the specific needs of your business, whether you're in healthcare, finance, e-commerce, or any other field. We design solutions that match how you work.",
+    },
+    {
+      question: "How safe and secure are the AI agents?",
+      answer:
+        "Security is a top priority for us. Our AI agents are built with strong protections to keep your data private and secure. We follow industry best practices and compliance standards to make sure your information is always handled responsibly.",
+    },
+    {
+      question: "Can AI agents connect with the tools I already use?",
+      answer:
+        "Yes, they can. Our AI agents are designed to integrate smoothly with your existing software, platforms, and workflows. We support API connections to make sure everything works together seamlessly.",
+    },
+    {
+      question: "What kinds of tasks can AI agents handle?",
+      answer:
+        "AI agents can take on a wide variety of jobs, from analyzing data and answering customer questions to generating leads, automating workflows, booking appointments, and more. Their abilities can grow and adapt as your business needs change.",
+    },
+    {
+      question: "How long does it take to set up an AI agent?",
+      answer:
+        "The setup timeline depends on how complex your needs are. In most cases, clients can have their AI agent up and running within a few weeks, including training, customization, and full integration.",
+    },
+  ],
+};
+---
+
+<section class="max-w-4xl mx-auto px-6 py-0">
+  <!-- Section header -->
+  <div class="text-center mb-16">
+    <span
+      class="inline-block text-sm font-semibold text-primary uppercase tracking-widest mb-4">
+      FAQ
+    </span>
+    <h2
+      class="text-3xl md:text-4xl lg:text-5xl font-heading font-bold text-gray-900 mb-6">
+      {faqData.title}
+    </h2>
+    <p class="text-lg text-gray-600 leading-relaxed max-w-2xl mx-auto">
+      {faqData.description}
+    </p>
+  </div>
+
+  <!-- FAQ accordion -->
+  <div class="faq-list divide-y divide-gray-200 border-t border-gray-200">
+    {
+      faqData.faqs.map((faq, index) => (
+        <div class="faq-item" data-faq-index={index}>
+          <button
+            type="button"
+            class="faq-trigger w-full flex justify-between items-center py-6 text-left cursor-pointer group focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2 rounded-sm"
+            aria-expanded="false"
+            aria-controls={`faq-content-${index}`}>
+            <span class="text-lg font-semibold text-gray-900 group-hover:text-primary transition-colors pr-4">
+              {faq.question}
+            </span>
+            <span class="faq-icon flex-shrink-0 w-6 h-6 text-primary transition-transform duration-300">
+              <Plus class="w-6 h-6" />
+            </span>
+          </button>
+          <div
+            id={`faq-content-${index}`}
+            class="faq-content overflow-hidden transition-all duration-300 ease-out"
+            style="max-height: 0;">
+            <p class="pb-6 text-gray-700 leading-relaxed pl-0 pr-10">
+              {faq.answer}
+            </p>
+          </div>
+        </div>
+      ))
+    }
+  </div>
+
+  <!-- Section Footer -->
+  <div class="text-center mt-12">
+    <h2 class="text-2xl font-heading font-bold text-gray-900 mb-6">
+      You pick the voice and personality and we'll handle the rest.
+    </h2>
+    <p class="text-md text-gray-600 leading-relaxed max-w-3xl mx-auto">
+      Choose the tone and personality that fits your brand. We handle the heavy
+      lifting—customizing scripts, training the voice, and integrating with your
+      systems. You get a fully-operational AI receptionist/agent ready to
+      engage, book, and convert—day or night.
+    </p>
+  </div>
+</section>
+
+<script>
+  class FAQAccordion {
+    container: HTMLElement;
+    items: NodeListOf<HTMLElement>;
+    openIndex: number | null;
+
+    constructor(container: HTMLElement) {
+      this.container = container;
+      this.items = container.querySelectorAll(".faq-item");
+      this.openIndex = null;
+      this.init();
+    }
+
+    init() {
+      this.items.forEach((item, index) => {
+        const trigger = item.querySelector(".faq-trigger") as HTMLButtonElement;
+        if (trigger) {
+          trigger.addEventListener("click", () => this.toggle(index));
+        }
+      });
+    }
+
+    toggle(index: number) {
+      const item = this.items[index];
+      const trigger = item.querySelector(".faq-trigger") as HTMLButtonElement;
+      const content = item.querySelector(".faq-content") as HTMLElement;
+      const icon = item.querySelector(".faq-icon") as HTMLElement;
+
+      const isOpen = item.classList.contains("open");
+
+      // Close all items first
+      this.items.forEach((otherItem, otherIndex) => {
+        if (otherIndex !== index) {
+          this.close(otherItem);
+        }
+      });
+
+      // Toggle current item
+      if (isOpen) {
+        this.close(item);
+        this.openIndex = null;
+      } else {
+        this.open(item);
+        this.openIndex = index;
+      }
+    }
+
+    open(item: HTMLElement) {
+      const trigger = item.querySelector(".faq-trigger") as HTMLButtonElement;
+      const content = item.querySelector(".faq-content") as HTMLElement;
+      const icon = item.querySelector(".faq-icon") as HTMLElement;
+
+      item.classList.add("open");
+      trigger.setAttribute("aria-expanded", "true");
+      icon.style.transform = "rotate(45deg)";
+
+      // Animate to full height
+      const scrollHeight = content.scrollHeight;
+      content.style.maxHeight = `${scrollHeight}px`;
+    }
+
+    close(item: HTMLElement) {
+      const trigger = item.querySelector(".faq-trigger") as HTMLButtonElement;
+      const content = item.querySelector(".faq-content") as HTMLElement;
+      const icon = item.querySelector(".faq-icon") as HTMLElement;
+
+      item.classList.remove("open");
+      trigger.setAttribute("aria-expanded", "false");
+      icon.style.transform = "rotate(0deg)";
+      content.style.maxHeight = "0";
+    }
+  }
+
+  // Initialize all FAQ accordions on the page
+  document.querySelectorAll<HTMLElement>(".faq-list").forEach((list) => {
+    new FAQAccordion(list);
+  });
+</script>
+
+<style>
+  .faq-item.open {
+    border-left: 4px solid var(--color-primary);
+    padding-left: 1rem;
+    margin-left: -1rem;
+  }
+
+  .faq-content {
+    will-change: max-height;
+  }
+</style>

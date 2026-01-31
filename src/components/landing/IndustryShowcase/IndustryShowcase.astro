@@ -12,12 +12,13 @@ const activeIndustry = Astro.props.activeIndustry || "home-services";
 ---
 
 <section
-  class="industry-showcase relative overflow-hidden py-20"
+  class="industry-showcase relative overflow-hidden py-0"
   data-auto-rotate="true">
   <!-- Atmospheric background gradient -->
-  <div
+  <!-- <div
     class="absolute inset-0 bg-linear-to-br from-slate-50 via-white to-primary/5 -z-10">
-  </div>
+  </div> -->
+  <div class="absolute inset-0 -z-10"></div>
 
   <!-- Subtle grid pattern overlay -->
   <div
@@ -39,7 +40,7 @@ const activeIndustry = Astro.props.activeIndustry || "home-services";
 
   <IndustryTabs activeIndustry={activeIndustry} />
 
-  <div class="mt-8 content-panels relative">
+  <div class="mt-8 content-panels relative min-h-[520px]">
     <div
       data-panel="home-services"
       id="panel-home-services"
