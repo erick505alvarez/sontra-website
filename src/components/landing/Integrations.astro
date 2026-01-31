@@ -1,4 +1,8 @@
 ---
+import { Image } from "astro:assets";
+import salesforce from "@/images/salesforce.svg";
+import openai from "@/images/openai.svg";
+
 // Import the integrations data
 // You can either import from a JSON file or define inline
 const integrationsData = {
@@ -22,8 +26,8 @@ const integrationsData = {
     { name: "HubSpot", icon: "hubspot", color: "FF7A59" },
     { name: "Zapier", icon: "zapier", color: "FF4A00" },
     { name: "Linear", icon: "linear", color: "5E6AD2" },
-    { name: "Salesforce", icon: "salesforce", color: "00A1E0" },
-    { name: "OpenAI", icon: "openai", color: "412991" },
+    // { name: "Salesforce", icon: "salesforce", color: "00A1E0" },
+    // { name: "OpenAI", icon: "openai", color: "412991" },
     { name: "Zendesk", icon: "zendesk", color: "03363D" },
     { name: "Clockify", icon: "clockify", color: "03A9F4" },
     { name: "Jira", icon: "jira", color: "0052CC" },
@@ -73,6 +77,30 @@ const integrationsData = {
           </div>
         ))
       }
+      <!-- salesforce icon - not hosted on simpleicons -->
+      <div
+        class="bg-white rounded-2xl p-4 md:p-5 shadow-sm hover:shadow-md transition-all duration-200 hover:-translate-y-1 flex items-center justify-center aspect-square">
+        <Image
+          title="salesforce"
+          src={salesforce}
+          alt="Salesforce logo"
+          width={200}
+          height={200}
+          class="w-full h-full object-contain"
+        />
+      </div>
+      <!-- openAI icon - not hosted on simpleicons -->
+      <div
+        class="bg-white rounded-2xl p-4 md:p-5 shadow-sm hover:shadow-md transition-all duration-200 hover:-translate-y-1 flex items-center justify-center aspect-square">
+        <Image
+          title="Open AI"
+          src={openai}
+          alt="Open AI logo"
+          width={200}
+          height={200}
+          class="w-full h-full object-contain"
+        />
+      </div>
     </div>
   </div>
 </section>
