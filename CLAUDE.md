@@ -68,6 +68,8 @@ Required server-side secrets (defined in astro.config.mjs env schema):
 - `TARGET_INBOX` - Email address for contact form submissions
 - `N8N_DEMO_CALL_WEBHOOK` - n8n webhook URL for demo call requests
 
+Whenever adding a new environment variable, both docker-compose.yml and docker-compose.dev.yml need to be updated with the new environment variables.
+
 ### Linting Rules
 
 - ESLint uses flat config (eslint.config.mjs)
