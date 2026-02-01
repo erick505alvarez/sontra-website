@@ -7,30 +7,158 @@ import { Phone } from "@lucide/astro";
     Test it for yourself...
   </h2>
   <form
+    id="demo-form"
     class="flex flex-col lg:flex-row gap-4 mx-auto border border-primary rounded-lg bg-primary/5 p-10">
     <input
       type="text"
       name="first_name"
       placeholder="First Name"
+      required
+      minlength="2"
       class="test-form-input flex-1 border border-gray-300 rounded-lg px-4 py-3 text-base"
     />
     <input
       type="email"
       name="email"
       placeholder="Email"
+      required
       class="test-form-input flex-1 border border-gray-300 rounded-lg px-4 py-3 text-base"
     />
     <input
       type="tel"
       name="phone"
       placeholder="19995554321"
+      required
+      pattern="^1?\d{10}$"
       class="test-form-input flex-1 border border-gray-300 rounded-lg px-4 py-3 text-base"
     />
     <button
-      type="button"
-      class="inline-flex items-center justify-center gap-2 bg-primary text-white px-6 py-3 rounded-lg font-semibold whitespace-nowrap hover:bg-primary/90 transition-colors">
-      Test A.I. Voice Agent
-      <Phone class="w-5 h-5" />
+      type="submit"
+      id="submit-btn"
+      class="inline-flex items-center justify-center gap-2 bg-primary text-white px-6 py-3 rounded-lg font-semibold whitespace-nowrap hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+      <span id="btn-text">Test A.I. Voice Agent</span>
+      <Phone class="w-5 h-5" id="phone-icon" />
+      <svg
+        id="spinner"
+        class="hidden w-5 h-5 animate-spin"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24">
+        <circle
+          class="opacity-25"
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          stroke-width="4">
+        </circle>
+        <path
+          class="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+        </path>
+      </svg>
     </button>
   </form>
+  <p id="form-message" class="mt-4 text-sm hidden"></p>
 </section>
+
+<script>
+  const form = document.getElementById("demo-form");
+  const submitBtn = document.getElementById("submit-btn");
+  const btnText = document.getElementById("btn-text");
+  const phoneIcon = document.getElementById("phone-icon");
+  const spinner = document.getElementById("spinner");
+  const message = document.getElementById("form-message");
+
+  // Early exit if elements don't exist
+  if (!form || !submitBtn || !btnText || !phoneIcon || !spinner || !message) {
+    console.error("Required form elements not found");
+    throw new Error("Form initialization failed");
+  }
+
+  // Reassign with proper types after null check for use in closures
+  const formEl = form as HTMLFormElement;
+  const buttonEl = submitBtn as HTMLButtonElement;
+  const btnTextEl = btnText as HTMLElement;
+  const phoneIconEl = phoneIcon as Element;
+  const spinnerEl = spinner as Element;
+  const messageEl = message as HTMLElement;
+
+  function formatPhone(phone: string): string {
+    const digits = phone.replace(/\D/g, "");
+    return digits.startsWith("1") ? `+${digits}` : `+1${digits}`;
+  }
+
+  function showMessage(text: string, isError = false): void {
+    messageEl.textContent = text;
+    messageEl.className = `mt-4 text-sm ${isError ? "text-red-600" : "text-green-600"}`;
+    messageEl.classList.remove("hidden");
+  }
+
+  function setLoading(loading: boolean): void {
+    buttonEl.disabled = loading;
+    btnTextEl.textContent = loading ? "Calling..." : "Test A.I. Voice Agent";
+    phoneIconEl.classList.toggle("hidden", loading);
+    spinnerEl.classList.toggle("hidden", !loading);
+  }
+
+  formEl.addEventListener("submit", async (e: Event) => {
+    e.preventDefault();
+
+    const formData = new FormData(formEl);
+    const firstName = formData.get("first_name");
+    const email = formData.get("email");
+    const phone = formData.get("phone");
+
+    const data = {
+      first_name: typeof firstName === "string" ? firstName.trim() : "",
+      email: typeof email === "string" ? email.trim() : "",
+      phone: formatPhone(typeof phone === "string" ? phone : ""),
+    };
+
+    // Validation
+    if (!data.first_name || data.first_name.length < 2) {
+      showMessage("Please enter a valid name", true);
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(data.email)) {
+      showMessage("Please enter a valid email", true);
+      return;
+    }
+
+    const phoneDigits = data.phone.replace(/\D/g, "");
+    if (phoneDigits.length < 10 || phoneDigits.length > 11) {
+      showMessage("Please enter a valid 10-digit phone number", true);
+      return;
+    }
+
+    setLoading(true);
+    messageEl.classList.add("hidden");
+
+    try {
+      const webhookUrl = import.meta.env.PUBLIC_N8N_WEBHOOK_URL;
+      if (!webhookUrl) {
+        throw new Error("Webhook URL not configured");
+      }
+
+      const response = await fetch(webhookUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) throw new Error("Request failed");
+
+      showMessage("Great! You should receive a call within 30 seconds.");
+      formEl.reset();
+    } catch (error) {
+      console.error("Form submission error:", error);
+      showMessage("Something went wrong. Please try again.", true);
+    } finally {
+      setLoading(false);
+    }
+  });
+</script>
