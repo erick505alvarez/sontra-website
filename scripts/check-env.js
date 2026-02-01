@@ -5,6 +5,7 @@ const requiredSecrets = [
   "RESEND_API_KEY",
   "RESEND_EMAIL_DOMAIN",
   "TARGET_INBOX",
+  "N8N_DEMO_CALL_WEBHOOK",
 ];
 
 const missing = requiredSecrets.filter((key) => !process.env[key]);
