@@ -44,11 +44,13 @@ Defined in tsconfig.json:
 ### Project Structure
 
 - `src/pages/` - File-based routing (index.astro, services.astro, booking.astro, 404.astro)
-- `src/pages/api/` - API routes (contact.ts handles form submissions)
+- `src/pages/api/` - API routes
+  - `contact.ts` - Contact form submissions via Resend
+  - `demo-call.ts` - Demo call requests forwarded to n8n webhook (includes bot detection)
 - `src/components/` - Astro components
   - `src/components/landing-page/` - Landing page section components
     - `index.astro` - Barrel file composing all landing sections
-    - `Hero.astro`, `TestForm.astro`, `ROICalculator.astro`, `ValueProp.astro`, `CaseStudy.astro`, `Calendar.astro`, `FAQs.astro`, `Integrations.astro`, `CallToAction.astro`
+    - `Hero.astro`, `SocialProof.astro`, `TestForm.astro`, `VideoSection.astro`, `ROICalculator.astro`, `ValueProp.astro`, `CaseStudy.astro`, `Calendar.astro`, `FAQs.astro`, `Integrations.astro`, `CallToAction.astro`
     - `IndustryShowcase/` - Interactive tabbed industry showcase with auto-rotation (see `CLAUDE.md` in that directory)
   - `src/components/services/` - Services page components (Hero, ProjectCard, ProjectsGrid, Testimonials)
 - `src/layouts/` - BaseLayout.astro wraps all pages
@@ -61,9 +63,10 @@ Defined in tsconfig.json:
 
 Required server-side secrets (defined in astro.config.mjs env schema):
 
-- `RESEND_API_KEY`
-- `RESEND_EMAIL_DOMAIN`
-- `TARGET_INBOX`
+- `RESEND_API_KEY` - Resend API key for email sending
+- `RESEND_EMAIL_DOMAIN` - Domain for Resend emails
+- `TARGET_INBOX` - Email address for contact form submissions
+- `N8N_DEMO_CALL_WEBHOOK` - n8n webhook URL for demo call requests
 
 ### Linting Rules
 

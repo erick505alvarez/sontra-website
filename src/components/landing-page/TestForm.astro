@@ -1,6 +1,6 @@
 ---
 // Src/components/TestForm.astro
-import { Phone } from "@lucide/astro";
+import { Phone, CircleCheck, CircleAlert } from "@lucide/astro";
 ---
 
 <section class="text-center">
@@ -9,162 +9,509 @@ import { Phone } from "@lucide/astro";
   </h2>
   <form
     id="demo-form"
-    class="flex flex-col lg:flex-row gap-4 mx-auto border border-primary rounded-lg bg-primary/5 p-10">
-    <input
-      type="text"
-      name="first_name"
-      placeholder="First Name"
-      required
-      minlength="2"
-      class="test-form-input flex-1 border border-gray-300 rounded-lg px-4 py-3 text-base"
-    />
-    <input
-      type="email"
-      name="email"
-      placeholder="Email"
-      required
-      class="test-form-input flex-1 border border-gray-300 rounded-lg px-4 py-3 text-base"
-    />
-    <input
-      type="tel"
-      name="phone"
-      placeholder="19995554321"
-      required
-      pattern="^1?\d{10}$"
-      class="test-form-input flex-1 border border-gray-300 rounded-lg px-4 py-3 text-base"
-    />
-    <!-- Honeypot field - hidden from real users -->
-    <input
-      type="text"
-      name="website"
-      class="absolute -left-[9999px] opacity-0 pointer-events-none"
-      tabindex="-1"
-      autocomplete="off"
-    />
-    <button
-      type="submit"
-      id="submit-btn"
-      class="inline-flex items-center justify-center gap-2 bg-primary text-white px-6 py-3 rounded-lg font-semibold whitespace-nowrap hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-      <span id="btn-text">Test A.I. Voice Agent</span>
-      <Phone class="w-5 h-5" id="phone-icon" />
-      <svg
-        id="spinner"
-        class="hidden w-5 h-5 animate-spin"
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24">
-        <circle
-          class="opacity-25"
-          cx="12"
-          cy="12"
-          r="10"
-          stroke="currentColor"
-          stroke-width="4">
-        </circle>
-        <path
-          class="opacity-75"
-          fill="currentColor"
-          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-        </path>
-      </svg>
-    </button>
+    class="max-w-[900px] mx-auto border border-primary rounded-xl bg-gradient-to-br from-primary/5 to-primary/10 p-6 md:p-10 relative overflow-hidden"
+    novalidate>
+    <!-- Subtle dot pattern background -->
+    <div
+      class="absolute inset-0 opacity-[0.03] pointer-events-none bg-[radial-gradient(circle_at_1px_1px,currentColor_1px,transparent_0)] bg-[length:24px_24px]">
+    </div>
+
+    <div class="relative z-10 flex flex-col lg:flex-row gap-4 lg:gap-3">
+      <!-- First Name Field -->
+      <div class="flex-1 min-w-0">
+        <div class="relative">
+          <input
+            type="text"
+            name="first_name"
+            id="field-first-name"
+            placeholder="First Name"
+            required
+            minlength="2"
+            autocomplete="given-name"
+            class="demo-input w-full bg-white border border-gray-300 rounded-lg px-4 py-3 pr-10 text-base transition-all duration-200 focus:outline-none focus:border-primary focus:ring-[3px] focus:ring-primary/10"
+          />
+          <div
+            class="validation-icon absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none opacity-0 transition-opacity duration-200">
+            <CircleCheck class="w-4 h-4 text-emerald-500 check-icon" />
+            <CircleAlert class="w-4 h-4 text-red-500 error-icon hidden" />
+          </div>
+        </div>
+        <p
+          class="field-error text-xs text-red-600 text-left mt-1 opacity-0 transition-opacity duration-200">
+        </p>
+      </div>
+
+      <!-- Email Field -->
+      <div class="flex-1 min-w-0">
+        <div class="relative">
+          <input
+            type="email"
+            name="email"
+            id="field-email"
+            placeholder="Email"
+            required
+            autocomplete="email"
+            class="demo-input w-full bg-white border border-gray-300 rounded-lg px-4 py-3 pr-10 text-base transition-all duration-200 focus:outline-none focus:border-primary focus:ring-[3px] focus:ring-primary/10"
+          />
+          <div
+            class="validation-icon absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none opacity-0 transition-opacity duration-200">
+            <CircleCheck class="w-4 h-4 text-emerald-500 check-icon" />
+            <CircleAlert class="w-4 h-4 text-red-500 error-icon hidden" />
+          </div>
+        </div>
+        <p
+          class="field-error text-xs text-red-600 text-left mt-1 opacity-0 transition-opacity duration-200">
+        </p>
+      </div>
+
+      <!-- Phone Field -->
+      <div class="flex-1 min-w-0">
+        <div class="relative">
+          <input
+            type="tel"
+            name="phone"
+            id="field-phone"
+            placeholder="5551234567"
+            required
+            autocomplete="tel"
+            class="demo-input w-full bg-white border border-gray-300 rounded-lg px-4 py-3 pr-10 text-base transition-all duration-200 focus:outline-none focus:border-primary focus:ring-[3px] focus:ring-primary/10"
+          />
+          <div
+            class="validation-icon absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none opacity-0 transition-opacity duration-200">
+            <CircleCheck class="w-4 h-4 text-emerald-500 check-icon" />
+            <CircleAlert class="w-4 h-4 text-red-500 error-icon hidden" />
+          </div>
+        </div>
+        <p
+          class="field-error text-xs text-red-600 text-left mt-1 opacity-0 transition-opacity duration-200">
+        </p>
+      </div>
+
+      <!-- Honeypot field - hidden from real users -->
+      <input
+        type="text"
+        name="website"
+        class="absolute -left-[9999px] opacity-0 pointer-events-none"
+        tabindex="-1"
+        autocomplete="off"
+      />
+
+      <!-- Hidden timing field for bot detection -->
+      <input type="hidden" name="_timing" id="timing-field" value="" />
+
+      <!-- Submit Button -->
+      <div class="lg:shrink-0">
+        <button
+          type="submit"
+          id="submit-btn"
+          class="demo-submit-btn w-full lg:w-auto inline-flex items-center justify-center gap-2 bg-primary text-white px-6 py-3 rounded-lg font-semibold whitespace-nowrap transition-all duration-200 hover:bg-primary/90 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/25 active:translate-y-0 active:shadow-md active:shadow-primary/20 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-none">
+          <span id="btn-text">Test AI Voice Agent</span>
+          <Phone class="w-5 h-5" id="phone-icon" />
+          <svg
+            id="spinner"
+            class="hidden w-5 h-5 animate-spin"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24">
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="4">
+            </circle>
+            <path
+              class="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+            </path>
+          </svg>
+        </button>
+      </div>
+    </div>
   </form>
-  <p id="form-message" class="mt-4 text-sm hidden"></p>
+
+  <!-- Form-level message (success/error) -->
+  <div id="form-message" class="flex items-center justify-center mt-4">
+    <p
+      id="message-text"
+      class="text-sm opacity-0 transition-all duration-300 translate-y-1">
+    </p>
+  </div>
 </section>
 
 <script>
+  interface FieldState {
+    touched: boolean;
+    valid: boolean;
+    value: string;
+  }
+
+  interface FormState {
+    first_name: FieldState;
+    email: FieldState;
+    phone: FieldState;
+  }
+
+  interface ValidationResult {
+    valid: boolean;
+    message: string;
+  }
+
   function initDemoForm(): void {
-    const form = document.getElementById("demo-form");
-    const submitBtn = document.getElementById("submit-btn");
+    const form = document.getElementById("demo-form") as HTMLFormElement | null;
+    const submitBtn = document.getElementById(
+      "submit-btn"
+    ) as HTMLButtonElement | null;
     const btnText = document.getElementById("btn-text");
     const phoneIcon = document.getElementById("phone-icon");
     const spinner = document.getElementById("spinner");
-    const message = document.getElementById("form-message");
+    const messageText = document.getElementById("message-text");
+    const timingField = document.getElementById(
+      "timing-field"
+    ) as HTMLInputElement | null;
 
-    // Type guard function
-    function assertElements(
-      elements: Record<string, HTMLElement | null>
-    ): asserts elements is Record<string, HTMLElement> {
-      for (const [name, el] of Object.entries(elements)) {
-        if (!el) {
-          throw new Error(`Required element "${name}" not found`);
-        }
-      }
+    if (
+      !form ||
+      !submitBtn ||
+      !btnText ||
+      !phoneIcon ||
+      !spinner ||
+      !messageText
+    ) {
+      console.error("Required form elements not found");
+      return;
     }
 
-    // Validate all elements exist
-    const elements = { form, submitBtn, btnText, phoneIcon, spinner, message };
-    assertElements(elements);
+    // Bot detection: track form load time and user interactions
+    const formLoadTime = Date.now();
+    let interactionCount = 0;
 
-    // Now TypeScript knows these are non-null
-    const formEl = elements.form as HTMLFormElement;
-    const buttonEl = elements.submitBtn as HTMLButtonElement;
-    const btnTextEl = elements.btnText as HTMLElement;
-    const phoneIconEl = elements.phoneIcon as HTMLElement;
-    const spinnerEl = elements.spinner as HTMLElement;
-    const messageEl = elements.message as HTMLElement;
+    // Track interactions for bot detection (mouse, keyboard, clicks)
+    form.addEventListener(
+      "mousemove",
+      () => {
+        interactionCount++;
+      },
+      { once: true }
+    );
+    form.addEventListener("keydown", () => {
+      interactionCount++;
+    });
+    form.addEventListener("click", () => {
+      interactionCount++;
+    });
 
-    function formatPhone(phone: string): string {
-      const digits = phone.replace(/\D/g, "");
+    // Form state management
+    const state: FormState = {
+      first_name: { touched: false, valid: false, value: "" },
+      email: { touched: false, valid: false, value: "" },
+      phone: { touched: false, valid: false, value: "" },
+    };
+
+    // Validation functions
+    const validators: Record<
+      keyof FormState,
+      (value: string) => ValidationResult
+    > = {
+      first_name: (value: string): ValidationResult => {
+        const trimmed = value.trim();
+        if (!trimmed) return { valid: false, message: "Name is required" };
+        if (trimmed.length < 2)
+          return {
+            valid: false,
+            message: "Name must be at least 2 characters",
+          };
+        if (!/^[a-zA-Z\s'-]+$/.test(trimmed))
+          return { valid: false, message: "Please enter a valid name" };
+        return { valid: true, message: "" };
+      },
+      email: (value: string): ValidationResult => {
+        const trimmed = value.trim();
+        if (!trimmed) return { valid: false, message: "Email is required" };
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(trimmed))
+          return { valid: false, message: "Please enter a valid email" };
+        return { valid: true, message: "" };
+      },
+      phone: (value: string): ValidationResult => {
+        const digits = value.replace(/\D/g, "");
+        if (!digits)
+          return { valid: false, message: "Phone number is required" };
+        if (digits.length < 10)
+          return {
+            valid: false,
+            message: "Please enter a 10-digit phone number",
+          };
+        if (digits.length > 11)
+          return { valid: false, message: "Phone number is too long" };
+        return { valid: true, message: "" };
+      },
+    };
+
+    // Phone number formatting for display
+    function formatPhoneDisplay(value: string): string {
+      const digits = value.replace(/\D/g, "");
+      if (digits.length === 0) return "";
+      if (digits.length <= 3) return `(${digits}`;
+      if (digits.length <= 6)
+        return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+      if (digits.length <= 10)
+        return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
+      // Handle 11 digits (with country code)
+      const withoutCountry = digits.startsWith("1")
+        ? digits.slice(1)
+        : digits.slice(0, 10);
+      return `(${withoutCountry.slice(0, 3)}) ${withoutCountry.slice(3, 6)}-${withoutCountry.slice(6, 10)}`;
+    }
+
+    function formatPhoneForSubmission(value: string): string {
+      const digits = value.replace(/\D/g, "");
       return digits.startsWith("1") ? `+${digits}` : `+1${digits}`;
     }
 
-    function showMessage(text: string, isError = false): void {
-      messageEl.textContent = text;
-      messageEl.className = `mt-4 text-sm ${isError ? "text-red-600" : "text-green-600"}`;
-      messageEl.classList.remove("hidden");
+    // Get field elements helper
+    function getFieldElements(fieldName: keyof FormState) {
+      const input = form!.querySelector(
+        `#field-${fieldName.replace("_", "-")}`
+      ) as HTMLInputElement | null;
+      const container = input?.parentElement?.parentElement;
+      const errorEl = container?.querySelector(
+        ".field-error"
+      ) as HTMLElement | null;
+      const iconContainer = input?.parentElement?.querySelector(
+        ".validation-icon"
+      ) as HTMLElement | null;
+      const checkIcon = iconContainer?.querySelector(
+        ".check-icon"
+      ) as HTMLElement | null;
+      const errorIcon = iconContainer?.querySelector(
+        ".error-icon"
+      ) as HTMLElement | null;
+      return { container, input, errorEl, iconContainer, checkIcon, errorIcon };
+    }
+
+    // Update field UI based on validation state
+    function updateFieldUI(
+      fieldName: keyof FormState,
+      result: ValidationResult,
+      showError: boolean
+    ): void {
+      const { input, errorEl, iconContainer, checkIcon, errorIcon } =
+        getFieldElements(fieldName);
+      if (!input || !errorEl || !iconContainer || !checkIcon || !errorIcon)
+        return;
+
+      // Remove previous state classes
+      input.classList.remove(
+        "border-emerald-500",
+        "bg-gradient-to-r",
+        "from-white",
+        "to-emerald-500/5",
+        "border-red-500",
+        "to-red-500/5",
+        "focus:ring-emerald-500/10",
+        "focus:ring-red-500/10"
+      );
+
+      // Apply new state classes
+      if (state[fieldName].touched || showError) {
+        if (result.valid) {
+          input.classList.add(
+            "border-emerald-500",
+            "bg-gradient-to-r",
+            "from-white",
+            "to-emerald-500/5",
+            "focus:ring-emerald-500/10"
+          );
+        } else {
+          input.classList.add(
+            "border-red-500",
+            "bg-gradient-to-r",
+            "from-white",
+            "to-red-500/5",
+            "focus:ring-red-500/10"
+          );
+        }
+      }
+
+      // Update validation icon visibility
+      if (state[fieldName].value && (state[fieldName].touched || showError)) {
+        iconContainer.classList.remove("opacity-0");
+        iconContainer.classList.add("opacity-100");
+        checkIcon.classList.toggle("hidden", !result.valid);
+        errorIcon.classList.toggle("hidden", result.valid);
+      } else {
+        iconContainer.classList.add("opacity-0");
+        iconContainer.classList.remove("opacity-100");
+      }
+
+      // Update error message
+      if (!result.valid && showError && state[fieldName].touched) {
+        errorEl.textContent = result.message;
+        errorEl.classList.remove("opacity-0");
+        errorEl.classList.add("opacity-100");
+      } else {
+        errorEl.classList.add("opacity-0");
+        errorEl.classList.remove("opacity-100");
+      }
+    }
+
+    // Validate a single field
+    function validateField(
+      fieldName: keyof FormState,
+      showError = false
+    ): boolean {
+      const result = validators[fieldName](state[fieldName].value);
+      state[fieldName].valid = result.valid;
+      updateFieldUI(fieldName, result, showError);
+      return result.valid;
+    }
+
+    // Clear field error state
+    function clearFieldError(fieldName: keyof FormState): void {
+      const { input, errorEl } = getFieldElements(fieldName);
+      if (errorEl) {
+        errorEl.classList.add("opacity-0");
+        errorEl.classList.remove("opacity-100");
+      }
+      if (input) {
+        input.classList.remove("animate-shake");
+      }
+    }
+
+    // Set up input event listeners for each field
+    (["first_name", "email", "phone"] as const).forEach((fieldName) => {
+      const { input } = getFieldElements(fieldName);
+      if (!input) return;
+
+      // Input event - validate and clear errors as user types
+      input.addEventListener("input", () => {
+        let value = input.value;
+
+        // Special handling for phone formatting
+        if (fieldName === "phone") {
+          value = formatPhoneDisplay(value);
+          if (input.value !== value) {
+            const cursorPos = input.selectionStart || 0;
+            const oldLength = input.value.length;
+            input.value = value;
+            const newLength = value.length;
+            const newPos = Math.max(0, cursorPos + (newLength - oldLength));
+            input.setSelectionRange(newPos, newPos);
+          }
+        }
+
+        state[fieldName].value = value;
+        clearFieldError(fieldName);
+
+        // Real-time validation after first blur
+        if (state[fieldName].touched) {
+          validateField(fieldName, false);
+        }
+      });
+
+      // Blur event - mark as touched and validate
+      input.addEventListener("blur", () => {
+        state[fieldName].touched = true;
+        validateField(fieldName, true);
+      });
+
+      // Focus event - clear error message
+      input.addEventListener("focus", () => {
+        clearFieldError(fieldName);
+      });
+    });
+
+    // Show form-level message
+    function showMessage(text: string, isError: boolean): void {
+      messageText!.textContent = text;
+      messageText!.classList.remove(
+        "opacity-0",
+        "translate-y-1",
+        "text-emerald-600",
+        "text-red-600"
+      );
+      messageText!.classList.add(
+        "opacity-100",
+        "translate-y-0",
+        isError ? "text-red-600" : "text-emerald-600"
+      );
     }
 
     function hideMessage(): void {
-      messageEl.classList.add("hidden");
+      messageText!.classList.add("opacity-0", "translate-y-1");
+      messageText!.classList.remove("opacity-100", "translate-y-0");
     }
 
+    // Loading state management
     function setLoading(loading: boolean): void {
-      buttonEl.disabled = loading;
-      btnTextEl.textContent = loading ? "Calling..." : "Test A.I. Voice Agent";
-      phoneIconEl.classList.toggle("hidden", loading);
-      spinnerEl.classList.toggle("hidden", !loading);
+      submitBtn!.disabled = loading;
+      btnText!.textContent = loading ? "Calling..." : "Test A.I. Voice Agent";
+      phoneIcon!.classList.toggle("hidden", loading);
+      spinner!.classList.toggle("hidden", !loading);
     }
 
+    // Shake animation for invalid fields
+    function shakeInvalidFields(): void {
+      (["first_name", "email", "phone"] as const).forEach((fieldName) => {
+        if (!state[fieldName].valid) {
+          const { input } = getFieldElements(fieldName);
+          if (input) {
+            input.classList.add("animate-shake");
+            setTimeout(() => input.classList.remove("animate-shake"), 400);
+          }
+        }
+      });
+    }
+
+    // Form submission handler
     async function handleSubmit(e: Event): Promise<void> {
       e.preventDefault();
 
-      const formData = new FormData(formEl);
-
-      // Extract and type values
-      const firstNameRaw = formData.get("first_name");
-      const emailRaw = formData.get("email");
-      const phoneRaw = formData.get("phone");
-      const honeypotRaw = formData.get("website");
-
-      const firstName =
-        typeof firstNameRaw === "string" ? firstNameRaw.trim() : "";
-      const email = typeof emailRaw === "string" ? emailRaw.trim() : "";
-      const phone = formatPhone(typeof phoneRaw === "string" ? phoneRaw : "");
+      // Bot detection
+      const timeOnPage = Date.now() - formLoadTime;
       const honeypot =
-        typeof honeypotRaw === "string" ? honeypotRaw.trim() : "";
+        (form!.querySelector('input[name="website"]') as HTMLInputElement)
+          ?.value || "";
 
-      // Client-side honeypot check (server also validates)
-      if (honeypot) {
-        showMessage("Something went wrong. Please try again.", true);
+      // Obvious bot - silent fake success
+      if (honeypot !== "") {
+        showMessage(
+          "Great! You should receive a call within 30 seconds.",
+          false
+        );
+        form!.reset();
         return;
       }
 
-      // Validation
-      if (!firstName || firstName.length < 2) {
-        showMessage("Please enter a valid name", true);
-        return;
+      // Update timing field
+      if (timingField) {
+        timingField.value = String(timeOnPage);
       }
 
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(email)) {
-        showMessage("Please enter a valid email", true);
-        return;
-      }
+      // Mark all fields as touched and validate
+      (["first_name", "email", "phone"] as const).forEach((fieldName) => {
+        const { input } = getFieldElements(fieldName);
+        if (input) {
+          state[fieldName].value = input.value;
+          state[fieldName].touched = true;
+        }
+      });
 
-      const phoneDigits = phone.replace(/\D/g, "");
-      if (phoneDigits.length < 10 || phoneDigits.length > 11) {
-        showMessage("Please enter a valid 10-digit phone number", true);
+      const isFirstNameValid = validateField("first_name", true);
+      const isEmailValid = validateField("email", true);
+      const isPhoneValid = validateField("phone", true);
+
+      if (!isFirstNameValid || !isEmailValid || !isPhoneValid) {
+        shakeInvalidFields();
+        const firstInvalid = !isFirstNameValid
+          ? "first_name"
+          : !isEmailValid
+            ? "email"
+            : "phone";
+        getFieldElements(firstInvalid).input?.focus();
         return;
       }
 
@@ -176,10 +523,12 @@ import { Phone } from "@lucide/astro";
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            first_name: firstName,
-            email,
-            phone,
+            first_name: state.first_name.value.trim(),
+            email: state.email.value.trim().toLowerCase(),
+            phone: formatPhoneForSubmission(state.phone.value),
             website: honeypot,
+            _timing: timeOnPage,
+            _interactions: interactionCount,
           }),
         });
 
@@ -189,16 +538,57 @@ import { Phone } from "@lucide/astro";
           throw new Error(result.error || "Request failed");
         }
 
-        showMessage("Great! You should receive a call within 30 seconds.");
-        formEl.reset();
+        // Success
+        showMessage(
+          "Great! You should receive a call within 30 seconds.",
+          false
+        );
+        form!.reset();
+
+        // Reset form state
+        (["first_name", "email", "phone"] as const).forEach((fieldName) => {
+          state[fieldName] = { touched: false, valid: false, value: "" };
+          const { input, iconContainer, errorEl } = getFieldElements(fieldName);
+          if (input) {
+            input.classList.remove(
+              "border-emerald-500",
+              "border-red-500",
+              "bg-gradient-to-r",
+              "from-white",
+              "to-emerald-500/5",
+              "to-red-500/5",
+              "focus:ring-emerald-500/10",
+              "focus:ring-red-500/10"
+            );
+          }
+          if (iconContainer) iconContainer.classList.add("opacity-0");
+          if (errorEl) errorEl.classList.add("opacity-0");
+        });
+
+        // Success pulse on button
+        submitBtn!.classList.add("animate-success-pulse");
+        setTimeout(
+          () => submitBtn!.classList.remove("animate-success-pulse"),
+          600
+        );
       } catch (error) {
         console.error("Form submission error:", error);
         const errorMessage =
           error instanceof Error ? error.message : "Something went wrong";
+
+        // Map server errors to friendly messages
+        const friendlyMessages: Record<string, string> = {
+          "Valid name required": "Please enter a valid name",
+          "Valid email required": "Please enter a valid email address",
+          "Valid phone required": "Please enter a valid phone number",
+          "Bot detected": "Something went wrong. Please try again.",
+          "Server configuration error":
+            "Service temporarily unavailable. Please try later.",
+        };
+
         showMessage(
-          errorMessage === "Request failed"
-            ? "Something went wrong. Please try again."
-            : errorMessage,
+          friendlyMessages[errorMessage] ||
+            "Something went wrong. Please try again.",
           true
         );
       } finally {
@@ -206,7 +596,7 @@ import { Phone } from "@lucide/astro";
       }
     }
 
-    formEl.addEventListener("submit", handleSubmit);
+    form.addEventListener("submit", handleSubmit);
   }
 
   // Initialize when DOM is ready
