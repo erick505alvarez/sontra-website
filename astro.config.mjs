@@ -33,6 +33,11 @@ export default defineConfig({
         access: "secret",
         optional: false,
       }),
+      N8N_DEMO_CALL_WEBHOOK: envField.string({
+        context: "server",
+        access: "secret",
+        optional: false,
+      }),
     },
   },
   // Add this server configuration
