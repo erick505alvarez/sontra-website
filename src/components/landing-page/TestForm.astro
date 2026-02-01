@@ -1,4 +1,5 @@
 ---
+// Src/components/TestForm.astro
 import { Phone } from "@lucide/astro";
 ---
 
@@ -32,6 +33,14 @@ import { Phone } from "@lucide/astro";
       pattern="^1?\d{10}$"
       class="test-form-input flex-1 border border-gray-300 rounded-lg px-4 py-3 text-base"
     />
+    <!-- Honeypot field - hidden from real users -->
+    <input
+      type="text"
+      name="website"
+      class="absolute -left-[9999px] opacity-0 pointer-events-none"
+      tabindex="-1"
+      autocomplete="off"
+    />
     <button
       type="submit"
       id="submit-btn"
@@ -64,101 +73,146 @@ import { Phone } from "@lucide/astro";
 </section>
 
 <script>
-  const form = document.getElementById("demo-form");
-  const submitBtn = document.getElementById("submit-btn");
-  const btnText = document.getElementById("btn-text");
-  const phoneIcon = document.getElementById("phone-icon");
-  const spinner = document.getElementById("spinner");
-  const message = document.getElementById("form-message");
+  function initDemoForm(): void {
+    const form = document.getElementById("demo-form");
+    const submitBtn = document.getElementById("submit-btn");
+    const btnText = document.getElementById("btn-text");
+    const phoneIcon = document.getElementById("phone-icon");
+    const spinner = document.getElementById("spinner");
+    const message = document.getElementById("form-message");
 
-  // Early exit if elements don't exist
-  if (!form || !submitBtn || !btnText || !phoneIcon || !spinner || !message) {
-    console.error("Required form elements not found");
-    throw new Error("Form initialization failed");
-  }
-
-  // Reassign with proper types after null check for use in closures
-  const formEl = form as HTMLFormElement;
-  const buttonEl = submitBtn as HTMLButtonElement;
-  const btnTextEl = btnText as HTMLElement;
-  const phoneIconEl = phoneIcon as Element;
-  const spinnerEl = spinner as Element;
-  const messageEl = message as HTMLElement;
-
-  function formatPhone(phone: string): string {
-    const digits = phone.replace(/\D/g, "");
-    return digits.startsWith("1") ? `+${digits}` : `+1${digits}`;
-  }
-
-  function showMessage(text: string, isError = false): void {
-    messageEl.textContent = text;
-    messageEl.className = `mt-4 text-sm ${isError ? "text-red-600" : "text-green-600"}`;
-    messageEl.classList.remove("hidden");
-  }
-
-  function setLoading(loading: boolean): void {
-    buttonEl.disabled = loading;
-    btnTextEl.textContent = loading ? "Calling..." : "Test A.I. Voice Agent";
-    phoneIconEl.classList.toggle("hidden", loading);
-    spinnerEl.classList.toggle("hidden", !loading);
-  }
-
-  formEl.addEventListener("submit", async (e: Event) => {
-    e.preventDefault();
-
-    const formData = new FormData(formEl);
-    const firstName = formData.get("first_name");
-    const email = formData.get("email");
-    const phone = formData.get("phone");
-
-    const data = {
-      first_name: typeof firstName === "string" ? firstName.trim() : "",
-      email: typeof email === "string" ? email.trim() : "",
-      phone: formatPhone(typeof phone === "string" ? phone : ""),
-    };
-
-    // Validation
-    if (!data.first_name || data.first_name.length < 2) {
-      showMessage("Please enter a valid name", true);
-      return;
+    // Type guard function
+    function assertElements(
+      elements: Record<string, HTMLElement | null>
+    ): asserts elements is Record<string, HTMLElement> {
+      for (const [name, el] of Object.entries(elements)) {
+        if (!el) {
+          throw new Error(`Required element "${name}" not found`);
+        }
+      }
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(data.email)) {
-      showMessage("Please enter a valid email", true);
-      return;
+    // Validate all elements exist
+    const elements = { form, submitBtn, btnText, phoneIcon, spinner, message };
+    assertElements(elements);
+
+    // Now TypeScript knows these are non-null
+    const formEl = elements.form as HTMLFormElement;
+    const buttonEl = elements.submitBtn as HTMLButtonElement;
+    const btnTextEl = elements.btnText as HTMLElement;
+    const phoneIconEl = elements.phoneIcon as HTMLElement;
+    const spinnerEl = elements.spinner as HTMLElement;
+    const messageEl = elements.message as HTMLElement;
+
+    function formatPhone(phone: string): string {
+      const digits = phone.replace(/\D/g, "");
+      return digits.startsWith("1") ? `+${digits}` : `+1${digits}`;
     }
 
-    const phoneDigits = data.phone.replace(/\D/g, "");
-    if (phoneDigits.length < 10 || phoneDigits.length > 11) {
-      showMessage("Please enter a valid 10-digit phone number", true);
-      return;
+    function showMessage(text: string, isError = false): void {
+      messageEl.textContent = text;
+      messageEl.className = `mt-4 text-sm ${isError ? "text-red-600" : "text-green-600"}`;
+      messageEl.classList.remove("hidden");
     }
 
-    setLoading(true);
-    messageEl.classList.add("hidden");
+    function hideMessage(): void {
+      messageEl.classList.add("hidden");
+    }
 
-    try {
-      const webhookUrl = import.meta.env.PUBLIC_N8N_WEBHOOK_URL;
-      if (!webhookUrl) {
-        throw new Error("Webhook URL not configured");
+    function setLoading(loading: boolean): void {
+      buttonEl.disabled = loading;
+      btnTextEl.textContent = loading ? "Calling..." : "Test A.I. Voice Agent";
+      phoneIconEl.classList.toggle("hidden", loading);
+      spinnerEl.classList.toggle("hidden", !loading);
+    }
+
+    async function handleSubmit(e: Event): Promise<void> {
+      e.preventDefault();
+
+      const formData = new FormData(formEl);
+
+      // Extract and type values
+      const firstNameRaw = formData.get("first_name");
+      const emailRaw = formData.get("email");
+      const phoneRaw = formData.get("phone");
+      const honeypotRaw = formData.get("website");
+
+      const firstName =
+        typeof firstNameRaw === "string" ? firstNameRaw.trim() : "";
+      const email = typeof emailRaw === "string" ? emailRaw.trim() : "";
+      const phone = formatPhone(typeof phoneRaw === "string" ? phoneRaw : "");
+      const honeypot =
+        typeof honeypotRaw === "string" ? honeypotRaw.trim() : "";
+
+      // Client-side honeypot check (server also validates)
+      if (honeypot) {
+        showMessage("Something went wrong. Please try again.", true);
+        return;
       }
 
-      const response = await fetch(webhookUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
+      // Validation
+      if (!firstName || firstName.length < 2) {
+        showMessage("Please enter a valid name", true);
+        return;
+      }
 
-      if (!response.ok) throw new Error("Request failed");
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        showMessage("Please enter a valid email", true);
+        return;
+      }
 
-      showMessage("Great! You should receive a call within 30 seconds.");
-      formEl.reset();
-    } catch (error) {
-      console.error("Form submission error:", error);
-      showMessage("Something went wrong. Please try again.", true);
-    } finally {
-      setLoading(false);
+      const phoneDigits = phone.replace(/\D/g, "");
+      if (phoneDigits.length < 10 || phoneDigits.length > 11) {
+        showMessage("Please enter a valid 10-digit phone number", true);
+        return;
+      }
+
+      setLoading(true);
+      hideMessage();
+
+      try {
+        const response = await fetch("/api/demo-call", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            first_name: firstName,
+            email,
+            phone,
+            website: honeypot,
+          }),
+        });
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+          throw new Error(result.error || "Request failed");
+        }
+
+        showMessage("Great! You should receive a call within 30 seconds.");
+        formEl.reset();
+      } catch (error) {
+        console.error("Form submission error:", error);
+        const errorMessage =
+          error instanceof Error ? error.message : "Something went wrong";
+        showMessage(
+          errorMessage === "Request failed"
+            ? "Something went wrong. Please try again."
+            : errorMessage,
+          true
+        );
+      } finally {
+        setLoading(false);
+      }
     }
-  });
+
+    formEl.addEventListener("submit", handleSubmit);
+  }
+
+  // Initialize when DOM is ready
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initDemoForm);
+  } else {
+    initDemoForm();
+  }
 </script>
