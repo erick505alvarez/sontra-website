@@ -1,5 +1,5 @@
 // Scripts/check-env.js
-import { access } from "node:fs";
+import { access } from "node:fs"; // Keep for injection when running on VPS server
 
 const requiredSecrets = [
   "RESEND_API_KEY",

@@ -1,7 +1,6 @@
 // Src/pages/api/demo-call.ts
 import type { APIRoute } from "astro";
-
-const N8N_DEMO_CALL_WEBHOOK = import.meta.env.N8N_DEMO_CALL_WEBHOOK;
+import { N8N_DEMO_CALL_WEBHOOK } from "astro:env/server";
 
 // Minimum time (ms) a human would take to fill the form
 const MIN_SUBMISSION_TIME = 2000;
