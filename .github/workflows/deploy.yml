@@ -17,16 +17,12 @@ jobs:
     steps:
       - name: 🚀 Deploy to VPS
         uses: appleboy/ssh-action@v1.0.0
-        env:
-          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
-          RESEND_EMAIL_DOMAIN: ${{ secrets.RESEND_EMAIL_DOMAIN }}
-          TARGET_INBOX: ${{ secrets.TARGET_INBOX }}
-          N8N_DEMO_CALL_WEBHOOK: ${{ secrets.N8N_DEMO_CALL_WEBHOOK }}
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USERNAME }}
           key: ${{ secrets.VPS_SSH_KEY }}
           port: 22
-          envs: RESEND_API_KEY,RESEND_EMAIL_DOMAIN,TARGET_INBOX,N8N_DEMO_CALL_WEBHOOK
+          # Note: Environment variables are sourced from /var/www/sontra/.env on the VPS
+          # This is required because SSH forced command prevents passing env vars via SSH
           script: |
             bash /home/deployer/deploy.sh

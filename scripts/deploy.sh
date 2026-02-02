@@ -2,18 +2,32 @@
 
 set -e  # Exit on any error
 
-# --- START NVM ---
-# Load the NVM environment specifically for non-interactive shells
-export NVM_DIR="/home/deployer/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-# --- END NVM ---
-
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
+
+# --- START NVM ---
+# Load the NVM environment specifically for non-interactive shells
+export NVM_DIR="/home/deployer/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+# --- END NVM ---
+
+# --- START ENV ---
+# Source .env file for environment variables
+# This is required because SSH forced command in authorized_keys
+# prevents environment variables from being passed via the SSH session
+if [ -f /var/www/sontra/.env ]; then
+    set -a
+    source /var/www/sontra/.env
+    set +a
+else
+    echo -e "${RED}❌ Error: /var/www/sontra/.env file not found${NC}"
+    exit 1
+fi
+# --- END ENV ---
 
 LOCK_FILE="/tmp/deploy.lock"
 
@@ -220,7 +234,7 @@ else
         echo -e "${GREEN}✅ Successfully rolled back to ${PREVIOUS_COMMIT}${NC}"
     else
         echo -e "${RED}❌ Rollback failed! Manual intervention required.${NC}"
-        echo -e "${RED}📞 Contact: erick@contactsontra.dev${NC}"
+        echo -e "${RED}📋 Check deployment logs and contact the administrator${NC}"
     fi
     
     exit 1

@@ -1,191 +1,214 @@
-# CI/CD Deployment Flow Documentation
+# CI/CD Deployment Documentation
 
 ## Overview
 
-This document traces the environment variable flow through the CI/CD pipeline to diagnose deployment issues.
+This document explains how the CI/CD pipeline deploys the Sontra website from GitHub to a DigitalOcean VPS, including how secrets are managed and passed to Docker containers.
 
 ## Architecture
 
 ```
-GitHub Push to main
-       ↓
-GitHub Actions (deploy.yml)
-       ↓ (SSH via appleboy/ssh-action)
-VPS: /home/deployer/deploy.sh  ← CRITICAL: This is a SEPARATE file from scripts/deploy.sh
-       ↓
-VPS: docker compose up (reads .env file)
-       ↓
-Container: check-env.js validates env vars
-       ↓
-Container: Astro app runs with env vars
+GitHub (main branch)
+       │
+       ▼ (push triggers workflow)
+GitHub Actions (.github/workflows/deploy.yml)
+       │
+       ▼ (SSH connection via appleboy/ssh-action)
+VPS: SSH forced command runs /home/deployer/deploy.sh
+       │
+       ▼ (sources /var/www/sontra/.env)
+VPS: deploy.sh has environment variables
+       │
+       ▼ (docker compose up)
+Docker: Containers receive env vars from shell
+       │
+       ▼ (Astro checks process.env)
+Container: scripts/check-env.js validates secrets
+       │
+       ▼
+Container: Astro app runs with secrets available
 ```
 
-## Key Files and Their Locations
+## Key Files
 
-| File               | Location                             | Purpose                       |
-| ------------------ | ------------------------------------ | ----------------------------- |
-| deploy.yml         | `.github/workflows/deploy.yml`       | GitHub Actions workflow       |
-| deploy.sh (repo)   | `scripts/deploy.sh`                  | Deploy script in git repo     |
-| deploy.sh (VPS)    | `/home/deployer/deploy.sh`           | **Actual script GitHub runs** |
-| .env (VPS)         | `/var/www/sontra/.env`               | Docker Compose env vars       |
-| docker-compose.yml | `/var/www/sontra/docker-compose.yml` | Container orchestration       |
+| File                 | Location                             | Purpose                                                      |
+| -------------------- | ------------------------------------ | ------------------------------------------------------------ |
+| `deploy.yml`         | `.github/workflows/deploy.yml`       | GitHub Actions workflow                                      |
+| `deploy.sh`          | `/home/deployer/deploy.sh` (VPS)     | Deployment script (manually synced from `scripts/deploy.sh`) |
+| `.env`               | `/var/www/sontra/.env` (VPS)         | Production secrets                                           |
+| `docker-compose.yml` | `/var/www/sontra/docker-compose.yml` | Container orchestration                                      |
+| `check-env.js`       | `scripts/check-env.js`               | Validates env vars at container startup                      |
 
-## CRITICAL ISSUE IDENTIFIED
+## Secrets Management
 
-**There are TWO deploy.sh files:**
+### Where Secrets Live
 
-1. `scripts/deploy.sh` - In the git repo, gets updated with commits
-2. `/home/deployer/deploy.sh` - On VPS, **manually maintained**, what GitHub Actions actually runs
-
-When you update `scripts/deploy.sh` in the repo, **the VPS copy at `/home/deployer/deploy.sh` is NOT automatically updated**.
-
-## Environment Variable Flow
-
-### 1. GitHub Actions (deploy.yml)
-
-```yaml
-script: |
-  export RESEND_API_KEY="${{ secrets.RESEND_API_KEY }}"
-  export RESEND_EMAIL_DOMAIN="${{ secrets.RESEND_EMAIL_DOMAIN }}"
-  export TARGET_INBOX="${{ secrets.TARGET_INBOX }}"
-  export N8N_DEMO_CALL_WEBHOOK="${{ secrets.N8N_DEMO_CALL_WEBHOOK }}"
-  bash /home/deployer/deploy.sh
-```
-
-GitHub Actions substitutes `${{ secrets.X }}` with actual values before sending to VPS.
-
-### 2. VPS deploy.sh
-
-The script at `/home/deployer/deploy.sh` validates these env vars:
+**Production secrets are stored in `/var/www/sontra/.env` on the VPS.** This is the single source of truth.
 
 ```bash
-if [ -z "$RESEND_API_KEY" ]; then
-    echo -e "${RED}❌ Error: RESEND_API_KEY not set${NC}"
-    exit 1
-fi
+# /var/www/sontra/.env
+RESEND_API_KEY=re_xxxx
+RESEND_EMAIL_DOMAIN=sontra.dev
+TARGET_INBOX=hello@sontra.dev
+N8N_DEMO_CALL_WEBHOOK=https://n8n.sontra.dev/webhook/xxxx
 ```
 
-Then re-exports them for docker-compose:
+### Why Not Pass Secrets via GitHub?
+
+The SSH key uses a **forced command** for security:
+
+```
+# /home/deployer/.ssh/authorized_keys
+restrict,command="/home/deployer/deploy.sh" ssh-ed25519 AAAA...
+```
+
+This means:
+
+- SSH connections can ONLY run `/home/deployer/deploy.sh`
+- Any command GitHub sends is ignored (including environment variables)
+- This is a security feature that limits what the deploy key can do
+
+### How Secrets Reach Docker
+
+1. **deploy.sh sources the .env file:**
+
+   ```bash
+   if [ -f /var/www/sontra/.env ]; then
+       set -a  # Auto-export all variables
+       source /var/www/sontra/.env
+       set +a
+   fi
+   ```
+
+2. **docker-compose.yml uses shell variable substitution:**
+
+   ```yaml
+   environment:
+     - RESEND_API_KEY=${RESEND_API_KEY}
+     - RESEND_EMAIL_DOMAIN=${RESEND_EMAIL_DOMAIN}
+     - TARGET_INBOX=${TARGET_INBOX}
+     - N8N_DEMO_CALL_WEBHOOK=${N8N_DEMO_CALL_WEBHOOK}
+   ```
+
+3. **Container validates at startup** via `check-env.js`
+
+## Deployment Flow
+
+### 1. Push to Main
 
 ```bash
-export RESEND_API_KEY
-export RESEND_EMAIL_DOMAIN
-export TARGET_INBOX
-export N8N_DEMO_CALL_WEBHOOK
+git push origin main
 ```
 
-### 3. Docker Compose
+### 2. GitHub Actions Triggers
 
-`docker-compose.yml` uses shell variable substitution:
+`.github/workflows/deploy.yml` runs:
 
-```yaml
-environment:
-  - RESEND_API_KEY=${RESEND_API_KEY}
-```
+- Connects to VPS via SSH
+- SSH forced command executes `/home/deployer/deploy.sh`
 
-Docker Compose reads from:
+### 3. deploy.sh Executes
 
-1. Shell environment (from exports)
-2. `.env` file in same directory as docker-compose.yml
+1. Loads NVM for Node.js
+2. Sources `/var/www/sontra/.env` for secrets
+3. Validates all required env vars are set
+4. Pulls latest code from GitHub
+5. Builds Docker image (`docker compose build astro-web`)
+6. Restarts container (`docker compose up -d astro-web`)
+7. Waits for health check
+8. Rolls back if deployment fails
 
-### 4. Container
+### 4. Container Starts
 
-`scripts/check-env.js` runs at container startup and validates `process.env`.
+1. `check-env.js` validates `process.env` has all required secrets
+2. Astro server starts on port 4321
+3. NGINX proxies traffic to the container
 
-## Why "RESEND_API_KEY not set" Error?
+## Adding a New Secret
 
-The `appleboy/ssh-action` executes commands via SSH. The `export` commands and `bash deploy.sh` run in the same SSH session, so exports SHOULD be inherited.
+When adding a new environment variable:
 
-**Possible causes:**
+1. **Add to VPS .env file:**
 
-1. **The `envs` parameter matters** - The old working config had `envs: RESEND_API_KEY,...`. This parameter may affect how the action handles the script execution context.
+   ```bash
+   ssh deployer@your-vps
+   vim /var/www/sontra/.env
+   # Add: NEW_SECRET=value
+   ```
 
-2. **Shell compatibility** - The ssh-action may use `/bin/sh` instead of `/bin/bash`, and export behavior differs.
+2. **Add to docker-compose.yml** (both files):
 
-3. **VPS deploy.sh is outdated** - If `/home/deployer/deploy.sh` differs from the repo version.
+   ```yaml
+   # docker-compose.yml and docker-compose.dev.yml
+   environment:
+     - NEW_SECRET=${NEW_SECRET}
+   ```
 
-## Solution Options
+3. **Add to Astro env schema** (`astro.config.mjs`):
 
-### Option A: Restore envs parameter (try first)
+   ```javascript
+   NEW_SECRET: envField.string({
+     context: "server",
+     access: "secret",
+     optional: false,
+   }),
+   ```
 
-```yaml
-envs: RESEND_API_KEY,RESEND_EMAIL_DOMAIN,TARGET_INBOX,N8N_DEMO_CALL_WEBHOOK
-script: |
-  export RESEND_API_KEY="${{ secrets.RESEND_API_KEY }}"
-  ...
-```
+4. **Add to check-env.js:**
 
-### Option B: Source .env file in deploy.sh
+   ```javascript
+   const requiredSecrets = [
+     // ... existing
+     "NEW_SECRET",
+   ];
+   ```
 
-Add to `/home/deployer/deploy.sh` after the NVM section:
+5. **Add to deploy.sh validation:**
+
+   ```bash
+   if [ -z "$NEW_SECRET" ]; then
+       echo -e "${RED}❌ Error: NEW_SECRET not set${NC}"
+       exit 1
+   fi
+   ```
+
+6. **Update .env.example** for documentation
+
+7. **Sync deploy.sh to VPS:**
+   ```bash
+   scp scripts/deploy.sh deployer@your-vps:/home/deployer/deploy.sh
+   ```
+
+## Troubleshooting
+
+### "Error: VARIABLE not set"
+
+The variable is missing from `/var/www/sontra/.env` on the VPS. SSH in and add it.
+
+### ".env file not found"
+
+The `.env` file doesn't exist at `/var/www/sontra/.env`. Create it with all required secrets.
+
+### Deployment succeeds but app crashes
+
+Check container logs:
 
 ```bash
-# Source .env file for environment variables
-if [ -f /var/www/sontra/.env ]; then
-    set -a
-    source /var/www/sontra/.env
-    set +a
-fi
-```
-
-This makes deploy.sh self-contained - it reads from the VPS .env file directly, not relying on GitHub exports.
-
-### Option C: Pass env vars inline
-
-```yaml
-script: |
-  RESEND_API_KEY="${{ secrets.RESEND_API_KEY }}" \
-  RESEND_EMAIL_DOMAIN="${{ secrets.RESEND_EMAIL_DOMAIN }}" \
-  TARGET_INBOX="${{ secrets.TARGET_INBOX }}" \
-  N8N_DEMO_CALL_WEBHOOK="${{ secrets.N8N_DEMO_CALL_WEBHOOK }}" \
-  bash /home/deployer/deploy.sh
-```
-
-## Do You Need Both GitHub Secrets AND VPS .env?
-
-**Short answer: You only need ONE, not both.**
-
-### Why they exist:
-
-| Source         | Purpose                                  | When Used         |
-| -------------- | ---------------------------------------- | ----------------- |
-| GitHub Secrets | Pass secrets to deploy.sh for validation | During deployment |
-| VPS .env file  | Docker Compose variable substitution     | Container startup |
-
-### Current redundancy:
-
-1. GitHub exports secrets → deploy.sh validates → re-exports
-2. Docker Compose reads from shell environment
-3. BUT docker-compose.yml ALSO reads from .env file
-
-### Recommended approach:
-
-**Use the VPS .env file as single source of truth:**
-
-1. Keep secrets in VPS `/var/www/sontra/.env` (you already have this)
-2. Have deploy.sh source this file instead of expecting GitHub exports
-3. Remove the GitHub export commands (they become unnecessary)
-4. Keep GitHub secrets only for VPS_HOST, VPS_USERNAME, VPS_SSH_KEY
-
-This simplifies the flow and eliminates the export inheritance issue.
-
-## Action Items
-
-1. **Immediate fix**: SSH into VPS and update `/home/deployer/deploy.sh` to source the .env file
-2. **Verify**: Check that `/var/www/sontra/.env` contains all 4 required variables
-3. **Simplify**: Consider removing GitHub secret exports since .env file has the values
-
-## Commands to Debug
-
-```bash
-# SSH to VPS and check .env contents
 ssh deployer@your-vps
-cat /var/www/sontra/.env
-
-# Check what deploy.sh version is on VPS
-cat /home/deployer/deploy.sh | head -60
-
-# Manually test sourcing .env
-source /var/www/sontra/.env
-echo $RESEND_API_KEY  # Should show value
+cd /var/www/sontra
+docker compose logs astro-web
 ```
+
+### Changes to deploy.sh not taking effect
+
+The VPS uses `/home/deployer/deploy.sh`, not the repo version. Manually sync:
+
+```bash
+scp scripts/deploy.sh deployer@your-vps:/home/deployer/deploy.sh
+```
+
+## Security Notes
+
+- **Forced command** in authorized_keys limits the SSH key to only run deploy.sh
+- **Secrets never pass through GitHub Actions** - they stay on the VPS
+- **GitHub secrets** (VPS_HOST, VPS_USERNAME, VPS_SSH_KEY) are only for SSH connection
+- **.env file** has restricted permissions (`chmod 600`)
