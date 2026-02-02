@@ -25,8 +25,40 @@ jobs:
           # Pass secrets as environment variables to the VPS script
           envs: RESEND_API_KEY,RESEND_EMAIL_DOMAIN,TARGET_INBOX,N8N_DEMO_CALL_WEBHOOK
           script: |
+            echo "=== DEBUG: Testing environment variable passing ==="
+
+            # Export the variables
             export RESEND_API_KEY="${{ secrets.RESEND_API_KEY }}"
             export RESEND_EMAIL_DOMAIN="${{ secrets.RESEND_EMAIL_DOMAIN }}"
             export TARGET_INBOX="${{ secrets.TARGET_INBOX }}"
             export N8N_DEMO_CALL_WEBHOOK="${{ secrets.N8N_DEMO_CALL_WEBHOOK }}"
+
+            # Test 1: Check if variables are set in current shell
+            echo "=== Test 1: Variables in current shell ==="
+            echo "RESEND_API_KEY length: ${#RESEND_API_KEY}"
+            echo "RESEND_EMAIL_DOMAIN length: ${#RESEND_EMAIL_DOMAIN}"
+            echo "TARGET_INBOX length: ${#TARGET_INBOX}"
+            echo "N8N_DEMO_CALL_WEBHOOK length: ${#N8N_DEMO_CALL_WEBHOOK}"
+
+            # Test 2: Check if variables exist (non-empty)
+            echo "=== Test 2: Variables exist check ==="
+            [ -n "$RESEND_API_KEY" ] && echo "RESEND_API_KEY: SET" || echo "RESEND_API_KEY: EMPTY"
+            [ -n "$RESEND_EMAIL_DOMAIN" ] && echo "RESEND_EMAIL_DOMAIN: SET" || echo "RESEND_EMAIL_DOMAIN: EMPTY"
+            [ -n "$TARGET_INBOX" ] && echo "TARGET_INBOX: SET" || echo "TARGET_INBOX: EMPTY"
+            [ -n "$N8N_DEMO_CALL_WEBHOOK" ] && echo "N8N_DEMO_CALL_WEBHOOK: SET" || echo "N8N_DEMO_CALL_WEBHOOK: EMPTY"
+
+            # Test 3: Check if variables are inherited by subshell
+            echo "=== Test 3: Subshell inheritance test ==="
+            bash -c 'echo "In subshell - RESEND_API_KEY length: ${#RESEND_API_KEY}"'
+            bash -c '[ -n "$RESEND_API_KEY" ] && echo "Subshell: RESEND_API_KEY is SET" || echo "Subshell: RESEND_API_KEY is EMPTY"'
+
+            # Test 4: Check shell type
+            echo "=== Test 4: Shell info ==="
+            echo "Current shell: $SHELL"
+            echo "Running as: $(whoami)"
+            ps -p $$ -o comm=
+
+            echo "=== END DEBUG ==="
+            echo ""
+            echo "=== Now running deploy.sh ==="
             bash /home/deployer/deploy.sh
