@@ -48,6 +48,10 @@ if [ -z "$TARGET_INBOX" ]; then
     echo -e "${RED}❌ Error: TARGET_INBOX not set${NC}"
     exit 1
 fi
+if [ -z "$N8N_DEMO_CALL_WEBHOOK" ]; then
+    echo -e "${RED}❌ Error: N8N_DEMO_CALL_WEBHOOK not set${NC}"
+    exit 1
+fi
 
 echo -e "${GREEN}✅ Environment variables validated${NC}"
 
@@ -55,6 +59,7 @@ echo -e "${GREEN}✅ Environment variables validated${NC}"
 export RESEND_API_KEY
 export RESEND_EMAIL_DOMAIN
 export TARGET_INBOX
+export N8N_DEMO_CALL_WEBHOOK
 # ===== END Validate environment variables =====
 
 # Check for force flag
