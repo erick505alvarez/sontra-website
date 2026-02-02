@@ -142,9 +142,18 @@ const spanClass = "font-bold";
     <div class="">
       <span class={cn(sectionLabel, "mb-0")}>Demo Voice Agent Number</span>
       <div class={cn(contentStack, "gap-0")}>
-        <div class="flex gap-2 items-center">
+        <div
+          class="flex gap-2 items-center hover:text-primary transition-colors">
           <Phone class="h-5 w-5 fill-primary border-none text-primary" />
-          +1 (999) 999-9999
+          {/* Phone number obfuscated to prevent scraping */}
+          <span class="phone-protect" aria-label="Call +1 833 516 4945">
+            <span aria-hidden="true">+1 (833)</span>
+            <span class="hidden" aria-hidden="true">SPAM-TRAP</span>
+            <span aria-hidden="true">516</span>
+            <span class="hidden" aria-hidden="true">-FAKE</span>
+            <span aria-hidden="true">-</span>
+            <span aria-hidden="true">4945</span>
+          </span>
         </div>
       </div>
     </div>
